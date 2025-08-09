@@ -21,6 +21,32 @@
 
     const getVideo = () => document.querySelector('video');
 
+    // Ensure the video/iframe does not block Picture-in-Picture
+    const ensurePipEnabled = (video) => {
+        if (!video) return false;
+        try {
+            // Remove the blocking attribute and runtime flag if present
+            if (video.hasAttribute('disablepictureinpicture')) {
+                video.removeAttribute('disablepictureinpicture');
+            }
+            if ('disablePictureInPicture' in video) {
+                try { video.disablePictureInPicture = false; } catch (_) { }
+            }
+            // If inside an iframe, make sure PiP is allowed
+            const frame = window.frameElement;
+            if (frame && frame.tagName === 'IFRAME') {
+                const allow = frame.getAttribute('allow') || '';
+                if (!/picture-in-picture/.test(allow)) {
+                    frame.setAttribute('allow', (allow ? allow + ';' : '') + 'picture-in-picture');
+                }
+            }
+            return true;
+        } catch (e) {
+            console.warn('[chimo] Failed to ensure PiP enabled:', e);
+            return false;
+        }
+    };
+
     // Builds the controls bar UI once a <video> is available
     const createButtons = () => {
         if (!document.querySelector('style[data-from="chimo-loop"]')) {
@@ -154,13 +180,20 @@
                 console.warn('Video element not found');
                 return;
             }
+            // Clear site-imposed PiP blocks
+            ensurePipEnabled(video);
+
             if (document.pictureInPictureElement === video) {
                 document.exitPictureInPicture().catch(err => {
                     console.warn('Failed to exit Picture-in-Picture:', err);
                 });
             } else {
                 video.requestPictureInPicture().catch(err => {
-                    console.warn('Failed to enter Picture-in-Picture:', err);
+                    if (err && /InvalidStateError/i.test(String(err))) {
+                        console.warn('Failed to enter Picture-in-Picture: likely blocked by `disablepictureinpicture` or iframe policy. I tried to remove the attribute and set iframe allow=picture-in-picture. If it persists, the site may be re-applying it.');
+                    } else {
+                        console.warn('Failed to enter Picture-in-Picture:', err);
+                    }
                 });
             }
         };
