@@ -47,6 +47,9 @@
         }
     };
 
+    const BTN = 15;
+    const EDGE = 16;
+
     // Builds the controls bar UI once a <video> is available
     const createButtons = () => {
         if (!document.querySelector('style[data-from="chimo-loop"]')) {
@@ -62,7 +65,6 @@
             display: block;
             will-change: z-index;
             cursor: default;
-            width: 82px;
             height: 31px;
             }
 
@@ -77,6 +79,7 @@
 
             .background-tint > .blur {
             background-color: rgba(0, 0, 0, 0.55);
+            backdrop-filter: saturate(180%) blur(17.5px);
             -webkit-backdrop-filter: saturate(180%) blur(17.5px);
             }
 
@@ -89,8 +92,8 @@
             position: absolute;
             border: 0;
             padding: 0;
-            width: 15px;
-            height: 15px;
+            width: ${BTN}px;
+            height: ${BTN}px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -100,8 +103,8 @@
             }
 
             .picture {
-            width: 15px;
-            height: 15px;
+            width: ${BTN}px;
+            height: ${BTN}px;
             background-color: rgba(255, 255, 255, 0.55);
             mix-blend-mode: plus-lighter;
             mask-size: 100% 100%;
@@ -161,6 +164,11 @@
         buttonsContainer.id = 'pip-loop-controls';
         buttonsContainer.classList.add('pip-loop-controls');
 
+        // compute left offset for the Nth button (0-base)
+        const getButtonLeftOffset = (index) => {
+            return (EDGE + BTN) * index + EDGE;
+        }
+
         // PiP icon
         const pipPicture = document.createElement('picture');
         pipPicture.classList.add('picture');
@@ -169,7 +177,7 @@
         // PiP button
         const pipButton = document.createElement('button');
         pipButton.classList.add('pip-button');
-        pipButton.style.left = '16px';
+        pipButton.style.left = getButtonLeftOffset(0) + 'px';
         pipButton.style.pointerEvents = 'auto';
         // Toggle PiP on click
         pipButton.onclick = (e) => {
@@ -207,12 +215,13 @@
         // Loop button
         const loopButton = document.createElement('button');
         loopButton.classList.add('loop-button');
-        loopButton.style.left = '47px';
+        loopButton.style.left = getButtonLeftOffset(1) + 'px';
         loopButton.style.pointerEvents = 'auto';
 
         // Reflect current loop state on the icon
         const updateLoopButton = () => {
             const video = getVideo();
+            if (!video) return;
             const loopBase64 = video?.loop ? icons.loopOn : icons.loopOff;
             loopPicture.style.maskImage = `url('${loopBase64}')`;
         };
@@ -243,6 +252,9 @@
 
         controlsBar.appendChild(backgroundTint);
         controlsBar.appendChild(buttonsContainer);
+
+        const count = buttonsContainer.children.length;
+        controlsBar.style.width = ((EDGE + BTN) * count + EDGE) + 'px';
 
         // Prefer to mount inside the video's parent
         const video = getVideo();
