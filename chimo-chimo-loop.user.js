@@ -6,7 +6,7 @@
 // @author       ryu-dayo
 // @match        https://*.douyin.com/*
 // @match        https://www.instagram.com/*
-// @match        https://*.xiaohongshu.com/explore/*
+// @match        https://www.xiaohongshu.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=douyin.com
 // @grant        none
 // ==/UserScript==
@@ -23,80 +23,11 @@
 
     const MIN_VIDEO_WIDTH = 300;
     const MIN_VIDEO_HEIGHT = 200;
-
-    const getVideo = () => {
-        const videos = Array.from(document.querySelectorAll('video'));
-        if (videos.length === 0) return null;
-
-        // Filter: Only consider videos that are visible in the viewport and sufficiently large
-        const filtered = videos.filter(v => {
-            const rect = v.getBoundingClientRect();
-            return rect.width > MIN_VIDEO_WIDTH && rect.height > MIN_VIDEO_HEIGHT && rect.bottom > 0 && rect.top < window.innerHeight;
-        });
-
-        if (filtered.length === 0) return null;
-
-        // Prefer videos without existing controls
-        const unpatched = filtered.find(v => !v.parentElement.querySelector('#controls-bar'));
-        if (unpatched) return unpatched;
-
-        // Fallback: select the video element closest to the center of the screen
-        const centerX = window.innerWidth / 2;
-        const centerY = window.innerHeight / 2;
-        let best = null;
-        let minDist = Infinity;
-
-        for (const v of filtered) {
-            const rect = v.getBoundingClientRect();
-            const dx = rect.left + rect.width / 2 - centerX;
-            const dy = rect.top + rect.height / 2 - centerY;
-            const dist = dx * dx + dy * dy;
-            if (dist < minDist) {
-                best = v;
-                minDist = dist;
-            }
-        }
-
-        return best;
-    };
-
-    // Ensure PiP attributes and iframe permissions are set
-    const ensurePipEnabled = (video) => {
-        if (!video) return false;
-        try {
-            // Remove disablepictureinpicture attribute if present
-            if (video.hasAttribute('disablepictureinpicture')) {
-                video.removeAttribute('disablepictureinpicture');
-            }
-            // Set disablePictureInPicture property to false if supported
-            if ('disablePictureInPicture' in video) {
-                try { video.disablePictureInPicture = false; } catch (_) { }
-            }
-            // Ensure iframe allows picture-in-picture if inside an iframe
-            const frame = window.frameElement;
-            if (frame && frame.tagName === 'IFRAME') {
-                const allow = frame.getAttribute('allow') || '';
-                if (!/picture-in-picture/.test(allow)) {
-                    frame.setAttribute('allow', (allow ? allow + ';' : '') + 'picture-in-picture');
-                }
-            }
-            return true;
-        } catch (e) {
-            console.warn('[chimo] Failed to ensure PiP enabled:', e);
-            return false;
-        }
-    };
-
     const BTN = 15;
     const EDGE = 16;
 
-    // Construct and inject the control bar UI when a <video> is available
-    const createButtons = () => {
-        const video = getVideo();
-        if (!video) return;
-        // Prevent duplicate controls in the same parent
-        if (video.parentElement.querySelector('#controls-bar')) return;
-
+    // === Styles ===
+    function injectStyle() {
         if (!document.querySelector('style[data-from="chimo-loop"]')) {
             const style = document.createElement('style');
             style.setAttribute('data-from', 'chimo-loop');
@@ -186,6 +117,80 @@
             `;
             document.head.appendChild(style);
         }
+    }
+
+    // === Core ===
+    const getVideo = () => {
+        const videos = Array.from(document.querySelectorAll('video'));
+        if (videos.length === 0) return null;
+
+        // Filter: Only consider videos that are visible in the viewport and sufficiently large
+        const filtered = videos.filter(v => {
+            const rect = v.getBoundingClientRect();
+            return rect.width > MIN_VIDEO_WIDTH && rect.height > MIN_VIDEO_HEIGHT && rect.bottom > 0 && rect.top < window.innerHeight;
+        });
+
+        if (filtered.length === 0) return null;
+
+        // Prefer videos without existing controls
+        const unpatched = filtered.find(v => !v.parentElement.querySelector('#controls-bar'));
+        if (unpatched) return unpatched;
+
+        // Fallback: select the video element closest to the center of the screen
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
+        let best = null;
+        let minDist = Infinity;
+
+        for (const v of filtered) {
+            const rect = v.getBoundingClientRect();
+            const dx = rect.left + rect.width / 2 - centerX;
+            const dy = rect.top + rect.height / 2 - centerY;
+            const dist = dx * dx + dy * dy;
+            if (dist < minDist) {
+                best = v;
+                minDist = dist;
+            }
+        }
+
+        return best;
+    };
+
+    // Ensure PiP attributes and iframe permissions are set
+    const ensurePipEnabled = (video) => {
+        if (!video) return false;
+        try {
+            // Remove disablepictureinpicture attribute if present
+            if (video.hasAttribute('disablepictureinpicture')) {
+                video.removeAttribute('disablepictureinpicture');
+            }
+            // Set disablePictureInPicture property to false if supported
+            if ('disablePictureInPicture' in video) {
+                try { video.disablePictureInPicture = false; } catch (_) { }
+            }
+            // Ensure iframe allows picture-in-picture if inside an iframe
+            const frame = window.frameElement;
+            if (frame && frame.tagName === 'IFRAME') {
+                const allow = frame.getAttribute('allow') || '';
+                if (!/picture-in-picture/.test(allow)) {
+                    frame.setAttribute('allow', (allow ? allow + ';' : '') + 'picture-in-picture');
+                }
+            }
+            return true;
+        } catch (e) {
+            console.warn('[chimo] Failed to ensure PiP enabled:', e);
+            return false;
+        }
+    };
+
+    // === UI ===
+    const createButtons = () => {
+        const video = getVideo();
+        if (!video) return;
+        // Prevent duplicate controls in the same parent
+        if (video.parentElement.querySelector('#controls-bar')) return;
+
+        injectStyle();
 
         // Glassmorphic background (blur and tint) for the control bar
         const backgroundTint = document.createElement('div');
@@ -209,7 +214,7 @@
         // Compute left offset for each button (0-indexed)
         const getButtonLeftOffset = (index) => {
             return (EDGE + BTN) * index + EDGE;
-        }
+        };
 
         // PiP button and icon
         const pipPicture = document.createElement('picture');
@@ -322,14 +327,21 @@
         showControls();
     };
 
-    // Observe DOM changes to inject controls when a <video> element appears
-    const observer = new MutationObserver(() => {
-        if (getVideo()) {
-            createButtons();
-        }
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
+    // === Observers ===
+    function observeVideoDom() {
+        const observer = new MutationObserver(() => {
+            if (getVideo()) {
+                createButtons();
+            }
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+    }
 
-    // Attempt early injection on page load
-    createButtons();
+    // === Init ===
+    function main() {
+        createButtons();
+        observeVideoDom();
+    }
+
+    main();
 })();

@@ -6,8 +6,9 @@ A lightweight userscript that adds Picture-in-Picture (PiP) and loop toggle butt
 
 - 🌠 Toggle Picture-in-Picture mode
 - 🔁 Toggle loop playback mode
-- Auto-inserts overlay UI in the top-right corner of video players
-- Lightweight and dependency-free
+- Auto-inserts overlay UI in the top-left corner of video players
+- Auto-hides controls after inactivity (3 seconds)
+- Lightweight, fast, and dependency-free
 
 ## Installation
 
@@ -19,7 +20,9 @@ A lightweight userscript that adds Picture-in-Picture (PiP) and loop toggle butt
 
 Currently tested on:
 
-- Direct video URLs on Douyin
+- [Douyin](https://www.douyin.com/)
+- [Instagram](https://www.instagram.com)
+- [Xiaohongshu](https://www.xiaohongshu.com)
 
 More site support may be added in the future.
 
