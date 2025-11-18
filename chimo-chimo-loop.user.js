@@ -1,14 +1,17 @@
 // ==UserScript==
 // @name         chimo-chimo-loop
+// @name:zh-CN   chimo-chimo-loop
 // @namespace    https://github.com/ryu-dayo
 // @version      0.1
-// @description  Adds PiP and loop controls to some HTML5 video players
+// @description  Adds Picture-in-Picture (PiP) and loop controls to supported HTML5 video players.
+// @description:zh-CN  为支持的网站的视频播放器添加画中画（PiP）和循环播放按钮。
 // @author       ryu-dayo
 // @match        https://*.douyin.com/*
 // @match        https://www.instagram.com/*
 // @match        https://www.xiaohongshu.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=douyin.com
 // @grant        none
+// @license      MIT
 // ==/UserScript==
 
 (function () {
