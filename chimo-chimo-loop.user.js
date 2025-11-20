@@ -2,7 +2,7 @@
 // @name         chimo-chimo-loop
 // @name:zh-CN   chimo-chimo-loop
 // @namespace    https://github.com/ryu-dayo
-// @version      0.1
+// @version      0.2.0
 // @description  Adds Picture-in-Picture (PiP) and loop controls to supported HTML5 video players.
 // @description:zh-CN  为支持的网站的视频播放器添加画中画（PiP）和循环播放按钮。
 // @author       ryu-dayo
@@ -19,14 +19,15 @@
 
     // Inline base64-encoded SVG icons
     const icons = {
-        pip: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNSIgaGVpZ2h0PSIxNSIgdmlld0JveD0iMCAwIDMwIDMwIj48ZyBmaWxsPSJub25lIj48cGF0aCBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2Utd2lkdGg9IjEuODc1IiBkPSJNMTEuNTYzIDIyLjgxM2gtNC4zNzVhMy43NSAzLjc1IDAgMCAxIC0zLjc1IC0zLjc1di0xMC42MjVhMy43NSAzLjc1IDAgMCAxIDMuNzUgLTMuNzVoMTUuNjI1YTMuNzUgMy43NSAwIDAgMSAzLjc1IDMuNzV2NC4zNzUiLz48cGF0aCB3aWR0aD0iMTIiIGhlaWdodD0iMTAiIHg9IjExIiB5PSIxMiIgZmlsbD0iY3VycmVudENvbG9yIiByeD0iMiIgZD0iTTE2LjI1IDE1SDI2LjI1QTIuNSAyLjUgMCAwIDEgMjguNzUgMTcuNVYyNUEyLjUgMi41IDAgMCAxIDI2LjI1IDI3LjVIMTYuMjVBMi41IDIuNSAwIDAgMSAxMy43NSAyNVYxNy41QTIuNSAyLjUgMCAwIDEgMTYuMjUgMTV6Ii8+PHBhdGggc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjg3NSIgZD0iTTEyLjUgOS41ODRWMTNhMC43NSAwLjc1IDAgMCAxIC0wLjIyIDAuNTNNOC4zMzQgMTMuNzVIMTEuNzVhMC43NSAwLjc1IDAgMCAwIDAuNTMgLTAuMjJNNy41IDguNzVsMy43NSAzLjc1IDEuMDMgMS4wMyIvPjwvZz48L3N2Zz4=',
-        loopOn: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNSIgaGVpZ2h0PSIxNSIgdmlld0JveD0iMCAwIDMwIDMwIj48cGF0aCBmaWxsPSJjdXJyZW50Q29sb3IiIGQ9Ik0xNSA1VjIuNzYzYzAgLTAuNTYzIC0wLjY3NSAtMC44MzggLTEuMDYzIC0wLjQzOGwtMy41IDMuNDg3Yy0wLjI1IDAuMjUgLTAuMjUgMC42MzcgMCAwLjg4N2wzLjQ4NyAzLjQ4N2MwLjQgMC4zODggMS4wNzUgMC4xMTIgMS4wNzUgLTAuNDVWNy41YzQuMTM4IDAgNy41IDMuMzYyIDcuNSA3LjUgMCAwLjk4OCAtMC4xODggMS45NSAtMC41NSAyLjgxMyAtMC4xODggMC40NSAtMC4wNSAwLjk2MyAwLjI4OCAxLjMgMC42MzcgMC42MzcgMS43MTMgMC40MTMgMi4wNSAtMC40MjUgMC40NjMgLTEuMTM3IDAuNzEyIC0yLjM4NyAwLjcxMiAtMy42ODggMCAtNS41MjUgLTQuNDc1IC0xMCAtMTAgLTEwbTAgMTcuNWMtNC4xMzggMCAtNy41IC0zLjM2MiAtNy41IC03LjUgMCAtMC45ODggMC4xODggLTEuOTUgMC41NSAtMi44MTMgMC4xODggLTAuNDUgMC4wNSAtMC45NjMgLTAuMjg4IC0xLjMgLTAuNjM3IC0wLjYzNyAtMS43MTMgLTAuNDEzIC0yLjA1IDAuNDI1QzUuMjUgMTIuNDUgNSAxMy43IDUgMTVjMCA1LjUyNSA0LjQ3NSAxMCAxMCAxMHYyLjIzN2MwIDAuNTYzIDAuNjc1IDAuODM4IDEuMDYzIDAuNDM4bDMuNDg3IC0zLjQ4N2MwLjI1IC0wLjI1IDAuMjUgLTAuNjM3IDAgLTAuODg3bC0zLjQ4NyAtMy40ODdhMC42MjUgMC42MjUgMCAwIDAgLTEuMDYzIDAuNDV6IiBzdHJva2Utd2lkdGg9IjAuNjI1IiBzdHJva2U9ImN1cnJlbnRDb2xvciIvPjwvc3ZnPg==',
-        loopOff: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDI0IDI0Ij48ZyBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2Utd2lkdGg9IjIiPjxwYXRoIHN0cm9rZS1kYXNoYXJyYXk9IjIwIiBzdHJva2UtZGFzaG9mZnNldD0iMjAiIGQ9Ik0zIDEyaDE3LjUiPjxhbmltYXRlIGZpbGw9ImZyZWV6ZSIgYXR0cmlidXRlTmFtZT0ic3Ryb2tlLWRhc2hvZmZzZXQiIGR1cj0iMC4ycyIgdmFsdWVzPSIyMDswIi8+PC9wYXRoPjxwYXRoIHN0cm9rZS1kYXNoYXJyYXk9IjEyIiBzdHJva2UtZGFzaG9mZnNldD0iMTIiIGQ9Im0yMSAxMiAtNyA3TTIxIDEyIDE0IDUiPjxhbmltYXRlIGZpbGw9ImZyZWV6ZSIgYXR0cmlidXRlTmFtZT0ic3Ryb2tlLWRhc2hvZmZzZXQiIGJlZ2luPSIwLjJzIiBkdXI9IjAuMnMiIHZhbHVlcz0iMTI7MCIvPjwvcGF0aD48L2c+PC9zdmc+',
+        enterPip: 'data:image/svg+xml,%3Csvg%20width%3D%22101%22%20height%3D%2282%22%20viewBox%3D%220%200%20101%2082%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M12.4512%2063.2813H68.2129C76.5625%2063.2813%2080.6641%2059.2285%2080.6641%2051.0254V12.2559C80.6641%204.0527%2076.5625%200%2068.2129%200H12.4512C4.10158%200%200%204.0527%200%2012.2559V51.0254C0%2059.2285%204.10158%2063.2813%2012.4512%2063.2813ZM7.03128%2050.6348V12.6465C7.03128%208.9356%209.03318%207.0313%2012.5489%207.0313H68.1153C71.6309%207.0313%2073.6328%208.9356%2073.6328%2012.6465V50.6348C73.6328%2054.3457%2071.6309%2056.25%2068.1153%2056.25H12.5489C9.03318%2056.25%207.03128%2054.3457%207.03128%2050.6348Z%22%20fill%3D%22black%22%2F%3E%3Cpath%20d%3D%22M30.957%2016.8457C30.8105%2015.625%2029.1991%2014.209%2027.6366%2015.8692L23.4374%2019.9707L17.5781%2014.1113C16.5527%2013.0371%2014.8437%2013.0371%2013.8183%2014.1113C12.7441%2015.1367%2012.7441%2016.8457%2013.8183%2017.8711L19.6777%2023.7305L15.5761%2027.9297C13.9159%2029.4922%2015.332%2031.1035%2016.5527%2031.25L30.664%2033.3984C31.3476%2033.4961%2032.0312%2033.252%2032.5195%2032.8125C32.9589%2032.3242%2033.2031%2031.6406%2033.1054%2030.957L30.957%2016.8457Z%22%20fill%3D%22black%22%2F%3E%3Cpath%20d%3D%22M50.4883%2081.6407H87.6953C95.9964%2081.6407%20100.146%2077.5879%20100.146%2069.3848V44.7754C100.146%2036.6211%2095.9964%2032.5195%2087.6953%2032.5195H50.4883C42.1875%2032.5195%2038.0371%2036.5723%2038.0371%2044.7754V69.3848C38.0371%2077.5879%2042.1875%2081.6407%2050.4883%2081.6407Z%22%20fill%3D%22black%22%2F%3E%3C%2Fsvg%3E',
+        exitPip: 'data:image/svg+xml,%3Csvg%20width%3D%22101%22%20height%3D%2282%22%20viewBox%3D%220%200%20101%2082%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M12.4512%2063.2813H68.2129C76.5625%2063.2813%2080.6641%2059.2285%2080.6641%2051.0254V12.2559C80.6641%204.0527%2076.5625%200%2068.2129%200H12.4512C4.10158%200%200%204.0527%200%2012.2559V51.0254C0%2059.2285%204.10158%2063.2813%2012.4512%2063.2813ZM7.03128%2050.6348V12.6465C7.03128%208.9356%209.03318%207.0313%2012.5489%207.0313H68.1153C71.6309%207.0313%2073.6328%208.9356%2073.6328%2012.6465V50.6348C73.6328%2054.3457%2071.6309%2056.25%2068.1153%2056.25H12.5489C9.03318%2056.25%207.03128%2054.3457%207.03128%2050.6348Z%22%20fill%3D%22black%22%2F%3E%3Cpath%20d%3D%22M15.1366%2029.8827C15.2831%2031.1034%2016.9433%2032.4706%2018.5058%2030.8593L22.6562%2026.7577L28.5644%2032.6171C29.5898%2033.6425%2031.2988%2033.6425%2032.3241%2032.6171C33.3495%2031.5917%2033.3495%2029.8827%2032.3241%2028.8573L26.4648%2022.9491L30.5663%2018.7987C32.1777%2017.2362%2030.8105%2015.5761%2029.5409%2015.4296L15.4784%2013.33C14.746%2013.2323%2014.1113%2013.4765%2013.623%2013.9159C13.1835%2014.4042%2012.9394%2015.0878%2013.037%2015.7714L15.1366%2029.8827Z%22%20fill%3D%22black%22%2F%3E%3Cpath%20d%3D%22M50.4883%2081.6407H87.6953C95.9964%2081.6407%20100.146%2077.5879%20100.146%2069.3848V44.7754C100.146%2036.6211%2095.9964%2032.5195%2087.6953%2032.5195H50.4883C42.1875%2032.5195%2038.0371%2036.5723%2038.0371%2044.7754V69.3848C38.0371%2077.5879%2042.1875%2081.6407%2050.4883%2081.6407Z%22%20fill%3D%22black%22%2F%3E%3C%2Fsvg%3E',
+        enableLoop: 'data:image/svg+xml,%3Csvg%20width%3D%2299%22%20height%3D%2266%22%20viewBox%3D%220%200%2099%2066%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M28.1739%2065.8691H70.6543C87.6953%2065.8691%2098.8284%2054.834%2098.8284%2037.7441C98.8284%2020.6543%2087.6953%209.47259%2070.6543%209.47259H62.2559C60.3028%209.47259%2058.7403%2011.084%2058.7403%2012.9883C58.7403%2014.9414%2060.3028%2016.5527%2062.2559%2016.5527H70.6543C83.252%2016.5527%2091.7964%2025.1465%2091.7964%2037.7441C91.7964%2050.3418%2083.252%2058.8379%2070.6543%2058.8379H28.1739C15.5274%2058.8379%207.03128%2050.3418%207.03128%2037.7441C7.03128%2025.1465%2015.5274%2016.5527%2028.1739%2016.5527H33.3496C33.1055%2015.332%2032.959%2014.0625%2032.959%2012.7441C32.959%2011.6699%2033.0567%2010.5957%2033.252%209.52149L28.1739%209.47259C11.0352%209.32619%200%2020.6543%200%2037.7441C0%2054.834%2011.0352%2065.8691%2028.1739%2065.8691Z%22%20fill%3D%22black%22%2F%3E%3Cpath%20d%3D%22M51.3672%2025.4394C58.4473%2025.4394%2064.1114%2019.7266%2064.1114%2012.6953C64.1114%205.6641%2058.4473%200%2051.3672%200C44.336%200%2038.6719%205.6641%2038.6719%2012.6953C38.6719%2019.7266%2044.336%2025.4394%2051.3672%2025.4394ZM51.3672%2018.6035C48.0957%2018.6035%2045.5078%2015.9668%2045.5078%2012.6953C45.5078%209.375%2048.0957%206.8359%2051.3672%206.8359C54.7364%206.8359%2057.2754%209.375%2057.2754%2012.6953C57.2754%2015.9668%2054.7364%2018.6035%2051.3672%2018.6035Z%22%20fill%3D%22black%22%2F%3E%3C%2Fsvg%3E',
+        disableLoop: 'data:image/svg+xml,%3Csvg%20width%3D%2299%22%20height%3D%2266%22%20viewBox%3D%220%200%2099%2066%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M28.1739%2065.8691H70.6543C87.6953%2065.8691%2098.8284%2054.834%2098.8284%2037.7441C98.8284%2020.6543%2087.6953%209.47259%2070.6543%209.47259H62.2559C60.3028%209.47259%2058.7403%2011.084%2058.7403%2012.9883C58.7403%2014.9414%2060.3028%2016.5527%2062.2559%2016.5527H70.6543C83.252%2016.5527%2091.7964%2025.1465%2091.7964%2037.7441C91.7964%2050.3418%2083.252%2058.8379%2070.6543%2058.8379H28.1739C15.5274%2058.8379%207.03128%2050.3418%207.03128%2037.7441C7.03128%2025.1465%2015.5274%2016.5527%2028.1739%2016.5527H33.3496C33.1055%2015.332%2032.959%2014.0625%2032.959%2012.7441C32.959%2011.6699%2033.0567%2010.5957%2033.252%209.52149L28.1739%209.47259C11.0352%209.32619%200%2020.6543%200%2037.7441C0%2054.834%2011.0352%2065.8691%2028.1739%2065.8691Z%22%20fill%3D%22black%22%2F%3E%3Cpath%20d%3D%22M51.3672%2025.4394C58.4473%2025.4394%2064.1114%2019.7266%2064.1114%2012.6953C64.1114%205.6641%2058.4473%200%2051.3672%200C44.336%200%2038.6719%205.6641%2038.6719%2012.6953C38.6719%2019.7266%2044.336%2025.4394%2051.3672%2025.4394Z%22%20fill%3D%22black%22%2F%3E%3C%2Fsvg%3E',
     };
 
     const MIN_VIDEO_WIDTH = 300;
     const MIN_VIDEO_HEIGHT = 200;
-    const BTN = 15;
+    const BTN = 16;
     const EDGE = 16;
 
     // === Styles ===
@@ -37,11 +38,11 @@
             style.textContent = `
             
             #controls-bar {
-            position: absolute;
+            position: relative;
             top: 6px;
             left: 6px;
             z-index: 999;
-            display: block;
+            display: inline-flex;
             will-change: z-index;
             cursor: default;
             height: 31px;
@@ -49,11 +50,10 @@
 
             .background-tint, .background-tint > div {
             position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
             border-radius: 8px;
+            pointer-events: none;
             }
 
             .background-tint > .blur {
@@ -68,11 +68,6 @@
             }
 
             .pip-button, .loop-button {
-            position: absolute;
-            border: 0;
-            padding: 0;
-            width: ${BTN}px;
-            height: ${BTN}px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -82,9 +77,7 @@
             }
 
             .picture {
-            width: ${BTN}px;
-            height: ${BTN}px;
-            background-color: rgba(255, 255, 255, 0.55);
+            background-color: rgba(255, 255, 255, 1);
             mix-blend-mode: plus-lighter;
             mask-size: 100% 100%;
             mask-repeat: no-repeat;
@@ -98,12 +91,12 @@
             transform: scale(0.89);
             }
 
-            #pip-loop-controls {
-            position: absolute;
-            width: 100%;
-            height: 100%;
+            #buttons-container {
             display: flex;
+            gap: 16px;
+            justify-content: center;
             align-items: center;
+            padding: 0 16px;
             }
 
             #controls-bar.hidden {
@@ -211,23 +204,27 @@
 
         // Container that aligns the two buttons inside the bar
         const buttonsContainer = document.createElement('div');
-        buttonsContainer.id = 'pip-loop-controls';
-        buttonsContainer.classList.add('pip-loop-controls');
-
-        // Compute left offset for each button (0-indexed)
-        const getButtonLeftOffset = (index) => {
-            return (EDGE + BTN) * index + EDGE;
-        };
+        buttonsContainer.id = 'buttons-container';
+        buttonsContainer.classList.add('buttons-container');
 
         // PiP button and icon
         const pipPicture = document.createElement('picture');
         pipPicture.classList.add('picture');
-        pipPicture.style.maskImage = `url('${icons.pip}')`;
+        pipPicture.style.width = `${BTN}px`;
+        pipPicture.style.height = `${BTN}px`;
 
         const pipButton = document.createElement('button');
         pipButton.classList.add('pip-button');
-        pipButton.style.left = getButtonLeftOffset(0) + 'px';
         pipButton.style.pointerEvents = 'auto';
+
+        const updatePipButton = () => {
+            const video = getVideo();
+            if (!video) return;
+            const isInPip = document.pictureInPictureElement === video;
+            const pipBase64 = isInPip ? icons.exitPip : icons.enterPip;
+            pipPicture.style.maskImage = `url('${pipBase64}')`;
+        };
+
         pipButton.onclick = (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -255,20 +252,27 @@
         };
         pipButton.appendChild(pipPicture);
 
+        document.addEventListener("enterpictureinpicture", updatePipButton);
+        document.addEventListener("leavepictureinpicture", updatePipButton);
+
+        // Initial update
+        updatePipButton();
+
         // Loop button and icon
         const loopPicture = document.createElement('picture');
         loopPicture.classList.add('picture');
+        loopPicture.style.width = `${BTN}px`;
+        loopPicture.style.height = `${BTN}px`;
 
         const loopButton = document.createElement('button');
         loopButton.classList.add('loop-button');
-        loopButton.style.left = getButtonLeftOffset(1) + 'px';
         loopButton.style.pointerEvents = 'auto';
 
         // Update loop icon to reflect current loop state
         const updateLoopButton = () => {
             const video = getVideo();
             if (!video) return;
-            const loopBase64 = video?.loop ? icons.loopOn : icons.loopOff;
+            const loopBase64 = video?.loop ? icons.enableLoop : icons.disableLoop;
             loopPicture.style.maskImage = `url('${loopBase64}')`;
         };
         loopButton.appendChild(loopPicture);
@@ -297,7 +301,6 @@
         controlsBar.appendChild(buttonsContainer);
 
         const count = buttonsContainer.children.length;
-        controlsBar.style.width = ((EDGE + BTN) * count + EDGE) + 'px';
 
         // Attach to the video's parent if possible
         if (video.parentElement) {
