@@ -2,11 +2,11 @@
 // @name         chimo-chimo-loop
 // @name:zh-CN   chimo-chimo-loop
 // @namespace    https://github.com/ryu-dayo
-// @version      0.2.0
+// @version      0.2.1
 // @description  Adds Picture-in-Picture (PiP) and loop controls to supported HTML5 video players.
 // @description:zh-CN  为支持的网站的视频播放器添加画中画（PiP）和循环播放按钮。
 // @author       ryu-dayo
-// @match        https://*.douyin.com/*
+// @match        https://www.douyin.com/*
 // @match        https://www.instagram.com/*
 // @match        https://www.xiaohongshu.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=douyin.com
@@ -38,7 +38,7 @@
             style.textContent = `
             
             #controls-bar {
-            position: relative;
+            position: absolute;
             top: 6px;
             left: 6px;
             z-index: 999;
@@ -272,7 +272,7 @@
         const updateLoopButton = () => {
             const video = getVideo();
             if (!video) return;
-            const loopBase64 = video?.loop ? icons.enableLoop : icons.disableLoop;
+            const loopBase64 = video?.loop ? icons.disableLoop : icons.enableLoop;
             loopPicture.style.maskImage = `url('${loopBase64}')`;
         };
         loopButton.appendChild(loopPicture);
