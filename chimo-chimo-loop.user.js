@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         chimo-chimo-loop
 // @name:zh-CN   chimo-chimo-loop
-// @namespace    https://github.com/ryu-dayo
-// @version      0.2.1
+// @namespace    https://github.com/ryu-dayo/chimo-chimo-loop
+// @version      0.2.2
 // @description  Adds Picture-in-Picture (PiP) and loop controls to supported HTML5 video players.
 // @description:zh-CN  为支持的网站的视频播放器添加画中画（PiP）和循环播放按钮。
 // @author       ryu-dayo
@@ -28,10 +28,14 @@
     const MIN_VIDEO_WIDTH = 300;
     const MIN_VIDEO_HEIGHT = 200;
     const BTN = 16;
-    const EDGE = 16;
+
+    let currentPipButton = null;
+    let currentVideo = null;
+
+    const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
 
     // === Styles ===
-    function injectStyle() {
+    const injectStyle = () => {
         if (!document.querySelector('style[data-from="chimo-loop"]')) {
             const style = document.createElement('style');
             style.setAttribute('data-from', 'chimo-loop');
@@ -71,6 +75,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 0;
+            border-width: 0;
             background-color: transparent !important;
             appearance: none;
             transition: opacity 0.1s linear;
@@ -113,10 +119,9 @@
             `;
             document.head.appendChild(style);
         }
-    }
+    };
 
-    // === Core ===
-    const getVideo = () => {
+    const getActiveVideo = () => {
         const videos = Array.from(document.querySelectorAll('video'));
         if (videos.length === 0) return null;
 
@@ -128,8 +133,11 @@
 
         if (filtered.length === 0) return null;
 
+        const playing = filtered.find(v => !v.paused && !v.ended);
+        if (playing && !playing.__chimoControlsAttached) return playing;
+
         // Prefer videos without existing controls
-        const unpatched = filtered.find(v => !v.parentElement.querySelector('#controls-bar'));
+        const unpatched = filtered.find(v => !v.__chimoControlsAttached);
         if (unpatched) return unpatched;
 
         // Fallback: select the video element closest to the center of the screen
@@ -150,6 +158,42 @@
         }
 
         return best;
+    };
+
+    // Glassmorphic background (blur and tint) for the control bar
+    const buildBackgroundTint = () => {
+        const backgroundTint = document.createElement('div');
+        backgroundTint.id = 'background-tint';
+        backgroundTint.classList.add('background-tint');
+
+        const blur = document.createElement('div');
+        blur.classList.add('blur');
+
+        const tint = document.createElement('div');
+        tint.classList.add('tint');
+
+        backgroundTint.append(blur, tint);
+        return backgroundTint;
+    };
+
+    const createButton = ({ className, onClick }) => {
+        const picture = document.createElement('picture');
+        picture.classList.add('picture');
+        picture.style.width = `${BTN}px`;
+        picture.style.height = `${BTN}px`;
+
+        const button = document.createElement('button');
+        button.classList.add(className);
+        button.style.pointerEvents = 'auto';
+
+        button.append(picture);
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onClick?.();
+        });
+
+        return button;
     };
 
     // Ensure PiP attributes and iframe permissions are set
@@ -179,147 +223,119 @@
         }
     };
 
-    // === UI ===
-    const createButtons = () => {
-        const video = getVideo();
-        if (!video) return;
-        // Prevent duplicate controls in the same parent
-        if (video.parentElement.querySelector('#controls-bar')) return;
+    const updatePipButton = () => {
+        if (!currentPipButton || !currentVideo) return;
+        const isInPip = document.pictureInPictureElement === currentVideo;
+        const pipBase64 = isInPip ? icons.exitPip : icons.enterPip;
+        currentPipButton.querySelector('picture').style.maskImage = `url('${pipBase64}')`;
+    };
 
-        injectStyle();
+    const createPipButton = (video) => {
+        if (!document.pictureInPictureEnabled || !ensurePipEnabled(video)) return null;
+        const supportsSafariPip = typeof video.webkitSetPresentationMode === 'function';
+        if (isSafari && !supportsSafariPip) return null;
 
-        // Glassmorphic background (blur and tint) for the control bar
-        const backgroundTint = document.createElement('div');
-        backgroundTint.id = 'background-tint';
-        backgroundTint.classList.add('background-tint');
+        const togglePip = () => {
+            if (!video) {
+                console.log("[chimo-chimo-loop]Video not found");
+                return;
+            }
 
-        const blur = document.createElement('div');
-        blur.classList.add('blur');
+            if (isSafari) {
+                const mode = video.webkitPresentationMode;
+                video.webkitSetPresentationMode(mode === 'picture-in-picture' ? 'inline' : 'picture-in-picture');
+                console.log(mode);
+                return;
+            }
 
-        const tint = document.createElement('div');
-        tint.classList.add('tint');
+            if (document.pictureInPictureElement === video) {
+                document.exitPictureInPicture().catch(err => console.warn(err));
+                console.log("[chimo-chimo-loop]Exit PiP");
 
-        backgroundTint.appendChild(blur);
-        backgroundTint.appendChild(tint);
+            } else {
+                video.requestPictureInPicture().catch(err => console.warn(err));
+                console.log("[chimo-chimo-loop]Request PiP");
+            }
+        };
 
-        // Container that aligns the two buttons inside the bar
+        const btn = createButton({ className: 'pip-button', onClick: togglePip });
+
+        currentVideo = video;
+        currentPipButton = btn;
+
+        updatePipButton();
+
+        return btn;
+    };
+
+    const createLoopButton = (video) => {
+        // Update loop icon to reflect current loop state
+        const updateLoopButton = () => {
+            const loopBase64 = video?.loop ? icons.disableLoop : icons.enableLoop;
+            btn.querySelector('picture').style.maskImage = `url('${loopBase64}')`;
+        };
+
+        const toggleLoop = () => {
+            if (!video) {
+                console.log("[chimo-chimo-loop]Video not found");
+                return;
+            }
+
+            video.loop = !video.loop;
+            updateLoopButton();
+        };
+
+        const btn = createButton({ className: 'loop-button', onClick: toggleLoop });
+        updateLoopButton();
+
+        return btn;
+    };
+
+    const buildButtonsContainer = (video) => {
         const buttonsContainer = document.createElement('div');
         buttonsContainer.id = 'buttons-container';
         buttonsContainer.classList.add('buttons-container');
 
-        // PiP button and icon
-        const pipPicture = document.createElement('picture');
-        pipPicture.classList.add('picture');
-        pipPicture.style.width = `${BTN}px`;
-        pipPicture.style.height = `${BTN}px`;
+        const pipBtn = createPipButton(video);
+        const loopBtn = createLoopButton(video);
 
-        const pipButton = document.createElement('button');
-        pipButton.classList.add('pip-button');
-        pipButton.style.pointerEvents = 'auto';
+        if (pipBtn) buttonsContainer.append(pipBtn);
+        if (loopBtn) buttonsContainer.append(loopBtn);
 
-        const updatePipButton = () => {
-            const video = getVideo();
-            if (!video) return;
-            const isInPip = document.pictureInPictureElement === video;
-            const pipBase64 = isInPip ? icons.exitPip : icons.enterPip;
-            pipPicture.style.maskImage = `url('${pipBase64}')`;
-        };
+        return buttonsContainer;
+    };
 
-        pipButton.onclick = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const video = getVideo();
-            if (!video) {
-                console.warn('Video element not found');
-                return;
-            }
-            // Ensure PiP is not blocked by site
-            ensurePipEnabled(video);
-
-            if (document.pictureInPictureElement === video) {
-                document.exitPictureInPicture().catch(err => {
-                    console.warn('Failed to exit Picture-in-Picture:', err);
-                });
-            } else {
-                video.requestPictureInPicture().catch(err => {
-                    if (err && /InvalidStateError/i.test(String(err))) {
-                        console.warn('Failed to enter Picture-in-Picture: likely blocked by `disablepictureinpicture` or iframe policy. I tried to remove the attribute and set iframe allow=picture-in-picture. If it persists, the site may be re-applying it.');
-                    } else {
-                        console.warn('Failed to enter Picture-in-Picture:', err);
-                    }
-                });
-            }
-        };
-        pipButton.appendChild(pipPicture);
-
-        document.addEventListener("enterpictureinpicture", updatePipButton);
-        document.addEventListener("leavepictureinpicture", updatePipButton);
-
-        // Initial update
-        updatePipButton();
-
-        // Loop button and icon
-        const loopPicture = document.createElement('picture');
-        loopPicture.classList.add('picture');
-        loopPicture.style.width = `${BTN}px`;
-        loopPicture.style.height = `${BTN}px`;
-
-        const loopButton = document.createElement('button');
-        loopButton.classList.add('loop-button');
-        loopButton.style.pointerEvents = 'auto';
-
-        // Update loop icon to reflect current loop state
-        const updateLoopButton = () => {
-            const video = getVideo();
-            if (!video) return;
-            const loopBase64 = video?.loop ? icons.disableLoop : icons.enableLoop;
-            loopPicture.style.maskImage = `url('${loopBase64}')`;
-        };
-        loopButton.appendChild(loopPicture);
-        loopButton.onclick = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const video = getVideo();
-            if (video) {
-                video.loop = !video.loop;
-                updateLoopButton();
-            } else {
-                console.warn('Video element not found');
-            }
-        };
-        updateLoopButton();
-
-        buttonsContainer.appendChild(pipButton);
-        buttonsContainer.appendChild(loopButton);
+    const buildControlsBar = (video) => {
+        const backgroundTint = buildBackgroundTint();
+        const buttonsContainer = buildButtonsContainer(video);
 
         // Root element for the control bar
         const controlsBar = document.createElement('div');
         controlsBar.id = 'controls-bar';
         controlsBar.classList.add('hidden', 'controls-bar');
 
-        controlsBar.appendChild(backgroundTint);
-        controlsBar.appendChild(buttonsContainer);
+        controlsBar.append(backgroundTint, buttonsContainer);
+        return controlsBar;
+    };
 
-        const count = buttonsContainer.children.length;
-
+    const attachControls = (video, controlsBar) => {
         // Attach to the video's parent if possible
-        if (video.parentElement) {
-            const parentStyle = getComputedStyle(video.parentElement);
-            if (parentStyle.position === 'static') {
-                video.parentElement.style.position = 'relative';
-            }
-            video.parentElement.appendChild(controlsBar);
-        } else {
-            document.body.appendChild(controlsBar);
-        }
+        const parent = video.parentElement || document.body;
+        const parentStyle = getComputedStyle(parent);
 
-        // Auto-hide control bar after inactivity
+        if (parentStyle.position === 'static') {
+            parent.style.position = 'relative';
+        }
+        parent.appendChild(controlsBar);
+    };
+
+    const setupAutoHide = (controlsBar, targetElement) => {
         let hideTimeout;
 
-        // Show the bar for 3s after mouse/touch activity
         const showControls = () => {
             controlsBar.classList.remove('hidden');
             controlsBar.classList.add('visible');
+
             clearTimeout(hideTimeout);
             hideTimeout = setTimeout(() => {
                 controlsBar.classList.remove('visible');
@@ -328,26 +344,50 @@
         };
 
         // Show controls on user interaction
-        document.addEventListener('mousemove', showControls, { passive: true });
-        document.addEventListener('touchstart', showControls, { passive: true });
+        targetElement.addEventListener('pointermove', showControls, { passive: true });
+        targetElement.addEventListener('touchstart', showControls, { passive: true });
         showControls();
     };
 
+    const initializeControls = (video) => {
+        if (video.__chimoControlsAttached) return;
+        video.__chimoControlsAttached = true;
+
+        injectStyle();
+
+        const controlsBar = buildControlsBar(video);
+        attachControls(video, controlsBar);
+
+        setupAutoHide(controlsBar, video.parentElement);
+    };
+
     // === Observers ===
-    function observeVideoDom() {
-        const observer = new MutationObserver(() => {
-            if (getVideo()) {
-                createButtons();
-            }
+    const observeVideoDom = () => {
+        let moTimer = null;
+
+        const observer = new MutationObserver((mutations) => {
+            if (!mutations.some(mutation => mutation.type === 'childList')) return;
+
+            if (moTimer) return;
+            moTimer = requestAnimationFrame(() => {
+                moTimer = null;
+                const video = getActiveVideo();
+                if (video) initializeControls(video);
+            });
         });
         observer.observe(document.body, { childList: true, subtree: true });
-    }
+    };
+
+    const setupGlobalPipEvents = () => {
+        document.addEventListener("enterpictureinpicture", updatePipButton);
+        document.addEventListener("leavepictureinpicture", updatePipButton);
+    };
 
     // === Init ===
-    function main() {
-        createButtons();
+    const main = () => {
+        setupGlobalPipEvents();
         observeVideoDom();
-    }
+    };
 
     main();
 })();
