@@ -1,30 +1,43 @@
 # chimo-chimo-loop
 
-A lightweight userscript that adds Picture-in-Picture (PiP) and loop toggle buttons to HTML5 video players on supported websites.
+A lightweight userscript that adds a small control bar with Picture-in-Picture (PiP) and Loop toggles to HTML5 videos.
+
+> Primarily tested on **Safari for macOS**.
+> Chromium browsers (e.g. Edge) also work on many sites, but behavior may vary.
 
 ## Features
 
-- 🌠 Toggle Picture-in-Picture mode
-- 🔁 Toggle loop playback mode
-- Auto-inserts overlay UI in the top-left corner of video players
-- Auto-hides controls after inactivity (3 seconds)
-- Lightweight, fast, and dependency-free
+- 🌠 One-click Picture-in-Picture
+- 🔁 One-click Loop toggle
+- 🧊 Clean overlay UI injected automatically
+- 👻 Auto-hides after 3 seconds of inactivity
+- ⚡️ Lightweight, fast, and dependency-free
 
-## Installation
+## Browser Support
 
-1. Install a userscript manager like [Tampermonkey](https://www.tampermonkey.net/)
-2. Click to install:  
-   [`chimo-chimo-loop.user.js`](https://raw.githubusercontent.com/ryu-dayo/chimo-chimo-loop/main/chimo-chimo-loop.user.js)
+Tested on:
 
-## Supported Sites
+- 🧭 **Safari** (macOS)
+- ⭕️ **Microsoft Edge** (macOS / Windows)
 
-Currently tested on:
+## Tested Sites
+
+Work on most pages using standard HTML5 `<video>` elements.
+
+Specifically tested on:
 
 - [Douyin](https://www.douyin.com/)
 - [Instagram](https://www.instagram.com)
 - [Xiaohongshu](https://www.xiaohongshu.com)
 
-More site support may be added in the future.
+> Some websites use custom mini-players or their own replay/loop logic,
+> which may not always match the script's loop state.
+
+## Installation
+
+1. Install a userscript manager (e.g. [Tampermonkey](https://www.tampermonkey.net/))
+2. Install the script →
+[`chimo-chimo-loop.user.js`](https://raw.githubusercontent.com/ryu-dayo/chimo-chimo-loop/main/chimo-chimo-loop.user.js)
 
 ## License
 
