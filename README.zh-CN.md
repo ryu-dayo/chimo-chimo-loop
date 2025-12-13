@@ -13,31 +13,13 @@
 - 👻 无操作 3 秒后自动隐藏
 - ⚡️ 轻巧、快速、零依赖
 
-## 浏览器支持
+## 兼容性说明
 
-已测试：
+适用于大多数使用原生 HTML5 `<video>` 元素的页面。
 
-- 🧭 **Safari**（macOS）
-- ⭕️ **Microsoft Edge**（macOS / Windows）
-
-## 适配与测试网站
-
-支持大多数使用原生 HTML5 `<video>` 元素的视频网站。
-
-特别测试：
-
-- [抖音](https://www.douyin.com/)
-- [Instagram](https://www.instagram.com)
-- [小红书](https://www.xiaohongshu.com)
-
-> 部分网站使用自定义播放器或其自身循环/重播逻辑，  
-> 这可能导致脚本的 Loop 状态与网站实际行为并不完全一致。
+> 某些网站使用自定义播放器或其自身的循环 / 重播逻辑，  
+> 这可能导致脚本的 Loop 状态与页面实际播放行为并不完全一致。
 
 ## 安装方法
 
-1. 安装用户脚本管理器（比如 [Tampermonkey](https://www.tampermonkey.net/)）
-2. 安装脚本 → [`chimo-chimo-loop.user.js`](https://raw.githubusercontent.com/ryu-dayo/chimo-chimo-loop/main/chimo-chimo-loop.user.js)
-
-## 许可协议
-
-MIT License © ryu-dayo
+通过 [GreasyFork](https://greasyfork.org/zh-CN/scripts/556184-chimo-chimo-loop) 安装

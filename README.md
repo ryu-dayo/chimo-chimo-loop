@@ -13,32 +13,13 @@ A lightweight userscript that adds a small control bar with Picture-in-Picture (
 - 👻 Auto-hides after 3 seconds of inactivity
 - ⚡️ Lightweight, fast, and dependency-free
 
-## Browser Support
+## Compatibility
 
-Tested on:
-
-- 🧭 **Safari** (macOS)
-- ⭕️ **Microsoft Edge** (macOS / Windows)
-
-## Tested Sites
-
-Work on most pages using standard HTML5 `<video>` elements.
-
-Specifically tested on:
-
-- [Douyin](https://www.douyin.com/)
-- [Instagram](https://www.instagram.com)
-- [Xiaohongshu](https://www.xiaohongshu.com)
+Works on most pages using standard HTML5 `<video>` elements.
 
 > Some websites use custom mini-players or their own replay/loop logic,
 > which may not always match the script's loop state.
 
 ## Installation
 
-1. Install a userscript manager (e.g. [Tampermonkey](https://www.tampermonkey.net/))
-2. Install the script →
-[`chimo-chimo-loop.user.js`](https://raw.githubusercontent.com/ryu-dayo/chimo-chimo-loop/main/chimo-chimo-loop.user.js)
-
-## License
-
-MIT License © ryu-dayo
+Install from [GreasyFork](https://greasyfork.org/zh-CN/scripts/556184-chimo-chimo-loop)
