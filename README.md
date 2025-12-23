@@ -3,7 +3,7 @@
 A lightweight userscript that adds a small control bar with Picture-in-Picture (PiP) and Loop toggles to HTML5 videos.
 
 > Primarily tested on **Safari for macOS**.
-> Chromium browsers (e.g. Edge) also work on many sites, but behavior may vary.
+> Also compatible with Chromium browsers (e.g. Edge), though functionality and visual performance may vary.
 
 ## Features
 
@@ -15,10 +15,9 @@ A lightweight userscript that adds a small control bar with Picture-in-Picture (
 
 ## Compatibility
 
-Works on most pages using standard HTML5 `<video>` elements.
-
-> Some websites use custom mini-players or their own replay/loop logic,
-> which may not always match the script's loop state.
+- **Universal Support:** Works on most pages using standard HTML5 `<video>` elements.
+- **Feature Priority:** If the website already provides equivalent native functionality, it is highly recommended to use the site's built-in controls first for the best compatibility.
+- **Behavioral Notes:** Some platforms use custom playback logic, which may occasionally cause the script's state to differ from the actual site behavior.
 
 ## Installation
 
