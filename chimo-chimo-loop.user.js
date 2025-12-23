@@ -2,13 +2,15 @@
 // @name         chimo-chimo-loop
 // @name:zh-CN   chimo-chimo-loop
 // @namespace    https://github.com/ryu-dayo/chimo-chimo-loop
-// @version      0.2.2
+// @version      1.0.0
 // @description  Adds Picture-in-Picture (PiP) and loop controls to supported HTML5 video players.
 // @description:zh-CN  为支持的网站的视频播放器添加画中画（PiP）和循环播放按钮。
 // @author       ryu-dayo
 // @match        https://www.douyin.com/*
 // @match        https://www.instagram.com/*
+// @match        https://www.threads.com/*
 // @match        https://www.xiaohongshu.com/*
+// @match        https://www.youtube.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=douyin.com
 // @grant        none
 // @license      MIT
@@ -25,24 +27,230 @@
         disableLoop: 'data:image/svg+xml,%3Csvg%20width%3D%2299%22%20height%3D%2266%22%20viewBox%3D%220%200%2099%2066%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M28.1739%2065.8691H70.6543C87.6953%2065.8691%2098.8284%2054.834%2098.8284%2037.7441C98.8284%2020.6543%2087.6953%209.47259%2070.6543%209.47259H62.2559C60.3028%209.47259%2058.7403%2011.084%2058.7403%2012.9883C58.7403%2014.9414%2060.3028%2016.5527%2062.2559%2016.5527H70.6543C83.252%2016.5527%2091.7964%2025.1465%2091.7964%2037.7441C91.7964%2050.3418%2083.252%2058.8379%2070.6543%2058.8379H28.1739C15.5274%2058.8379%207.03128%2050.3418%207.03128%2037.7441C7.03128%2025.1465%2015.5274%2016.5527%2028.1739%2016.5527H33.3496C33.1055%2015.332%2032.959%2014.0625%2032.959%2012.7441C32.959%2011.6699%2033.0567%2010.5957%2033.252%209.52149L28.1739%209.47259C11.0352%209.32619%200%2020.6543%200%2037.7441C0%2054.834%2011.0352%2065.8691%2028.1739%2065.8691Z%22%20fill%3D%22black%22%2F%3E%3Cpath%20d%3D%22M51.3672%2025.4394C58.4473%2025.4394%2064.1114%2019.7266%2064.1114%2012.6953C64.1114%205.6641%2058.4473%200%2051.3672%200C44.336%200%2038.6719%205.6641%2038.6719%2012.6953C38.6719%2019.7266%2044.336%2025.4394%2051.3672%2025.4394Z%22%20fill%3D%22black%22%2F%3E%3C%2Fsvg%3E',
     };
 
-    const MIN_VIDEO_WIDTH = 300;
-    const MIN_VIDEO_HEIGHT = 200;
-    const BTN = 16;
-
-    let currentPipButton = null;
-    let currentVideo = null;
+    const CONTROL_BTN_SIZE = 16;
 
     const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
 
-    // === Styles ===
-    const injectStyle = () => {
-        if (!document.querySelector('style[data-from="chimo-loop"]')) {
+    // === Model ===
+    class VideoManager {
+        constructor() {
+            this.currentVideo = null;
+            this.layoutObserver = null;
+            this.ui = new UIController();
+        }
+
+        shouldSwitchVideo(newVideo) {
+            const old = this.currentVideo;
+            if (!old) return true;
+            if (old === newVideo) return false;
+            if (!old.isConnected) return true;
+
+            const o = old.getBoundingClientRect();
+            const n = newVideo.getBoundingClientRect();
+
+            const cx = window.innerWidth / 2;
+            const cy = window.innerHeight / 2;
+            const dNew = Math.hypot(n.left + n.width / 2 - cx, n.top + n.height / 2 - cy);
+            const dOld = Math.hypot(o.left + o.width / 2 - cx, o.top + o.height / 2 - cy);
+            if (dNew < dOld) return true;
+
+            if (!old.paused) {
+                if (o.width * o.height > n.width * n.height) return false;
+            }
+            return true;
+        }
+
+        handleVideoActivation(video) {
+            if (!video) return;
+
+            if (!this.shouldSwitchVideo(video)) return;
+
+            if (this.currentVideo) {
+                this.detach('switch');
+            }
+            this.attach(video);
+        }
+
+        attach(video) {
+            this.currentVideo = video;
+
+            this.cleanupObserver();
+            this.observeVideoLayout(video);
+
+            this.ui.attach(video);
+        }
+
+        detach(reason) {
+            if (!this.currentVideo) return;
+
+            this.cleanupObserver();
+            this.ui.detach(reason);
+            this.currentVideo = null;
+        }
+
+        observeVideoLayout(video) {
+            this.layoutObserver = new ResizeObserver(() => {
+                if (this.currentVideo === video) {
+                    this.ui.reposition();
+                }
+            });
+            this.layoutObserver.observe(video);
+        }
+
+        cleanupObserver() {
+            if (this.layoutObserver) {
+                this.layoutObserver.disconnect();
+                this.layoutObserver = null;
+            }
+        }
+    }
+
+    // === UI ===
+    class UIController {
+        constructor() {
+            this.controlsBar = null;
+            this.boundVideo = null;
+            this.hideTimeout = null;
+            this.pollingInterval = null;
+
+            this.pipBtn = null;
+            this.loopBtn = null;
+
+            this._boundGlobalHandler = this.throttle(this.handleGlobalPointer.bind(this), 400);
+            this._boundReposition = this.reposition.bind(this);
+        }
+
+        throttle(func, limit) {
+            let inThrottle;
+            return function () {
+                const args = arguments;
+                const context = this;
+                if (!inThrottle) {
+                    func.apply(context, args);
+                    inThrottle = true;
+                    setTimeout(() => { inThrottle = false; }, limit);
+                }
+            };
+        }
+
+        ensureUI() {
+            if (!this.controlsBar) {
+                this.injectStyle();
+                this.controlsBar = this.buildControlsBar();
+                document.body.appendChild(this.controlsBar);
+            }
+        }
+
+        attach(video) {
+            this.ensureUI();
+            this.boundVideo = video;
+
+            this.pipBtn?.setVideo(video);
+            this.loopBtn?.setVideo(video);
+
+            window.addEventListener('pointermove', this._boundGlobalHandler, { passive: true });
+
+            this.reposition();
+            this.showAndTimer();
+        }
+
+        detach(reason) {
+            if (this.boundVideo) {
+                window.removeEventListener('pointermove', this._boundGlobalHandler);
+                this.stopPolling();
+            }
+            this.boundVideo = null;
+            this.stopTimer();
+            this.hide();
+        }
+
+        reposition() {
+            if (!this.boundVideo || !this.controlsBar) return;
+
+            const rect = this.boundVideo.getBoundingClientRect();
+            if (!rect.width || !rect.height) return;
+            this.controlsBar.style.transform = `translate(${rect.left + 6}px, ${rect.top + 6}px)`;
+        }
+
+        handleGlobalPointer(e) {
+            if (!this.boundVideo) return;
+
+            const rect = this.boundVideo.getBoundingClientRect();
+            const isOverVideo = (
+                e.clientX >= rect.left &&
+                e.clientX <= rect.right &&
+                e.clientY >= rect.top &&
+                e.clientY <= rect.bottom
+            );
+            const isOverControls = this.controlsBar.contains(e.target);
+            if (isOverVideo || isOverControls) {
+                this.showAndTimer();
+            }
+        }
+
+        showAndTimer() {
+            this.show();
+            this.startHideTimer(3000);
+            this.startPolling(500);
+        }
+
+        startHideTimer(timeout) {
+            this.stopTimer();
+            this.hideTimeout = setTimeout(() => {
+                this.hide();
+            }, timeout);
+        }
+
+        startPolling(duration) {
+            this.stopPolling();
+            const startTime = performance.now();
+
+            const poll = (now) => {
+                this.reposition();
+                if (now - startTime < duration) {
+                    this.pollingInterval = requestAnimationFrame(poll);
+                }
+            };
+            this.pollingInterval = requestAnimationFrame(poll);
+        }
+
+        stopPolling() {
+            if (this.pollingInterval) {
+                cancelAnimationFrame(this.pollingInterval);
+                this.pollingInterval = null;
+            }
+        }
+
+        stopTimer() {
+            if (this.hideTimeout) {
+                clearTimeout(this.hideTimeout);
+                this.hideTimeout = null;
+            }
+        }
+
+        show() {
+            if (!this.controlsBar) return;
+            this.controlsBar.classList.replace('hidden', 'visible');
+        }
+
+        hide() {
+            if (!this.controlsBar) return;
+            this.controlsBar.classList.replace('visible', 'hidden');
+        }
+
+        updateAllStyles() {
+            if (!this.boundVideo || !this.controlsBar) return;
+            this.pipBtn?.update();
+            this.loopBtn?.update();
+        }
+
+        injectStyle() {
+            if (document.getElementById('ccl-style')) return;
             const style = document.createElement('style');
-            style.setAttribute('data-from', 'chimo-loop');
+            style.id = 'ccl-style';
             style.textContent = `
-            
-            #controls-bar {
-            position: absolute;
+            .ccl-bar {
+            position: fixed;
             top: 6px;
             left: 6px;
             z-index: 999;
@@ -52,7 +260,7 @@
             height: 31px;
             }
 
-            .background-tint, .background-tint > div {
+            .ccl-bg, .ccl-bg > div {
             position: absolute;
             width: 100%;
             height: 100%;
@@ -60,13 +268,13 @@
             pointer-events: none;
             }
 
-            .background-tint > .blur {
+            .ccl-bg > .blur {
             background-color: rgba(0, 0, 0, 0.55);
             backdrop-filter: saturate(180%) blur(17.5px);
             -webkit-backdrop-filter: saturate(180%) blur(17.5px);
             }
 
-            .background-tint > .tint {
+            .ccl-bg > .tint {
             background-color: rgba(255, 255, 255, 0.14);
             mix-blend-mode: lighten;
             }
@@ -82,11 +290,18 @@
             transition: opacity 0.1s linear;
             }
 
-            .picture {
+            .pip-button { --icon: url('${icons.enterPip}'); }
+            .pip-button[data-active="true"] { --icon: url('${icons.exitPip}'); }
+            .loop-button { --icon: url('${icons.enableLoop}'); }
+            .loop-button[data-active="true"] { --icon: url('${icons.disableLoop}'); }
+
+            .ccl-icon {
             background-color: rgba(255, 255, 255, 1);
             mix-blend-mode: plus-lighter;
             mask-size: 100% 100%;
             mask-repeat: no-repeat;
+            mask-image: var(--icon);
+            -webkit-mask-image: var(--icon);
             transition: transform 150ms;
             will-change: transform;
             pointer-events: none;
@@ -97,7 +312,7 @@
             transform: scale(0.89);
             }
 
-            #buttons-container {
+            .ccl-container {
             display: flex;
             gap: 16px;
             justify-content: center;
@@ -105,289 +320,231 @@
             padding: 0 16px;
             }
 
-            #controls-bar.hidden {
+            .ccl-bar.hidden {
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.3s ease;
             }
 
-            #controls-bar.visible {
+            .ccl-bar.visible {
             opacity: 1;
             pointer-events: auto;
             transition: opacity 0.3s ease;
             }
             `;
             document.head.appendChild(style);
-        }
-    };
+        };
 
-    const getActiveVideo = () => {
-        const videos = Array.from(document.querySelectorAll('video'));
-        if (videos.length === 0) return null;
+        // Glassmorphic background (blur and tint) for the control bar
+        buildBackgroundTint() {
+            const backgroundTint = document.createElement('div');
+            backgroundTint.classList.add('ccl-bg');
 
-        // Filter: Only consider videos that are visible in the viewport and sufficiently large
-        const filtered = videos.filter(v => {
-            const rect = v.getBoundingClientRect();
-            return rect.width > MIN_VIDEO_WIDTH && rect.height > MIN_VIDEO_HEIGHT && rect.bottom > 0 && rect.top < window.innerHeight;
-        });
+            const blur = document.createElement('div');
+            blur.classList.add('blur');
 
-        if (filtered.length === 0) return null;
+            const tint = document.createElement('div');
+            tint.classList.add('tint');
 
-        const playing = filtered.find(v => !v.paused && !v.ended);
-        if (playing && !playing.__chimoControlsAttached) return playing;
+            backgroundTint.append(blur, tint);
+            return backgroundTint;
+        };
 
-        // Prefer videos without existing controls
-        const unpatched = filtered.find(v => !v.__chimoControlsAttached);
-        if (unpatched) return unpatched;
+        createButton({ className, onClick }) {
+            const picture = document.createElement('picture');
+            picture.classList.add('ccl-icon');
+            picture.style.width = `${CONTROL_BTN_SIZE}px`;
+            picture.style.height = `${CONTROL_BTN_SIZE}px`;
 
-        // Fallback: select the video element closest to the center of the screen
-        const centerX = window.innerWidth / 2;
-        const centerY = window.innerHeight / 2;
-        let best = null;
-        let minDist = Infinity;
+            const button = document.createElement('button');
+            button.classList.add(className);
+            button.style.pointerEvents = 'auto';
 
-        for (const v of filtered) {
-            const rect = v.getBoundingClientRect();
-            const dx = rect.left + rect.width / 2 - centerX;
-            const dy = rect.top + rect.height / 2 - centerY;
-            const dist = dx * dx + dy * dy;
-            if (dist < minDist) {
-                best = v;
-                minDist = dist;
-            }
-        }
+            button.append(picture);
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onClick?.();
+            });
 
-        return best;
-    };
+            return button;
+        };
 
-    // Glassmorphic background (blur and tint) for the control bar
-    const buildBackgroundTint = () => {
-        const backgroundTint = document.createElement('div');
-        backgroundTint.id = 'background-tint';
-        backgroundTint.classList.add('background-tint');
-
-        const blur = document.createElement('div');
-        blur.classList.add('blur');
-
-        const tint = document.createElement('div');
-        tint.classList.add('tint');
-
-        backgroundTint.append(blur, tint);
-        return backgroundTint;
-    };
-
-    const createButton = ({ className, onClick }) => {
-        const picture = document.createElement('picture');
-        picture.classList.add('picture');
-        picture.style.width = `${BTN}px`;
-        picture.style.height = `${BTN}px`;
-
-        const button = document.createElement('button');
-        button.classList.add(className);
-        button.style.pointerEvents = 'auto';
-
-        button.append(picture);
-        button.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            onClick?.();
-        });
-
-        return button;
-    };
-
-    // Ensure PiP attributes and iframe permissions are set
-    const ensurePipEnabled = (video) => {
-        if (!video) return false;
-        try {
-            // Remove disablepictureinpicture attribute if present
-            if (video.hasAttribute('disablepictureinpicture')) {
-                video.removeAttribute('disablepictureinpicture');
-            }
-            // Set disablePictureInPicture property to false if supported
-            if ('disablePictureInPicture' in video) {
-                try { video.disablePictureInPicture = false; } catch (_) { }
-            }
-            // Ensure iframe allows picture-in-picture if inside an iframe
-            const frame = window.frameElement;
-            if (frame && frame.tagName === 'IFRAME') {
-                const allow = frame.getAttribute('allow') || '';
-                if (!/picture-in-picture/.test(allow)) {
-                    frame.setAttribute('allow', (allow ? allow + ';' : '') + 'picture-in-picture');
+        // Ensure PiP attributes and iframe permissions are set
+        ensurePipEnabled(video) {
+            if (!video) return false;
+            try {
+                // Remove disablepictureinpicture attribute if present
+                if (video.hasAttribute('disablepictureinpicture')) {
+                    video.removeAttribute('disablepictureinpicture');
                 }
-            }
-            return true;
-        } catch (e) {
-            console.warn('[chimo] Failed to ensure PiP enabled:', e);
-            return false;
-        }
-    };
-
-    const updatePipButton = () => {
-        if (!currentPipButton || !currentVideo) return;
-        const isInPip = document.pictureInPictureElement === currentVideo;
-        const pipBase64 = isInPip ? icons.exitPip : icons.enterPip;
-        currentPipButton.querySelector('picture').style.maskImage = `url('${pipBase64}')`;
-    };
-
-    const createPipButton = (video) => {
-        if (!document.pictureInPictureEnabled || !ensurePipEnabled(video)) return null;
-        const supportsSafariPip = typeof video.webkitSetPresentationMode === 'function';
-        if (isSafari && !supportsSafariPip) return null;
-
-        const togglePip = () => {
-            if (!video) {
-                console.log("[chimo-chimo-loop]Video not found");
-                return;
-            }
-
-            if (isSafari) {
-                const mode = video.webkitPresentationMode;
-                video.webkitSetPresentationMode(mode === 'picture-in-picture' ? 'inline' : 'picture-in-picture');
-                console.log(mode);
-                return;
-            }
-
-            if (document.pictureInPictureElement === video) {
-                document.exitPictureInPicture().catch(err => console.warn(err));
-                console.log("[chimo-chimo-loop]Exit PiP");
-
-            } else {
-                video.requestPictureInPicture().catch(err => console.warn(err));
-                console.log("[chimo-chimo-loop]Request PiP");
+                // Set disablePictureInPicture property to false if supported
+                if ('disablePictureInPicture' in video) {
+                    try { video.disablePictureInPicture = false; } catch (_) { }
+                }
+                // Ensure iframe allows picture-in-picture if inside an iframe
+                const frame = window.frameElement;
+                if (frame && frame.tagName === 'IFRAME') {
+                    const allow = frame.getAttribute('allow') || '';
+                    if (!/picture-in-picture/.test(allow)) {
+                        frame.setAttribute('allow', (allow ? allow + ';' : '') + 'picture-in-picture');
+                    }
+                }
+                return true;
+            } catch (e) {
+                console.warn('[chimo] Failed to ensure PiP enabled:', e);
+                return false;
             }
         };
 
-        const btn = createButton({ className: 'pip-button', onClick: togglePip });
+        createPipButton() {
+            let currentVideo = null;
+            if (!document.pictureInPictureEnabled) return null;
 
-        currentVideo = video;
-        currentPipButton = btn;
+            const updatePipButton = () => {
+                if (!currentVideo) return;
+                const isInPip = document.pictureInPictureElement === currentVideo;
+                btn.setAttribute('data-active', isInPip);
+            };
 
-        updatePipButton();
+            const togglePip = () => {
+                if (!currentVideo) {
+                    console.log("[chimo-chimo-loop]Video not found");
+                    return;
+                }
+                this.ensurePipEnabled(currentVideo)
 
-        return btn;
-    };
+                const supportsSafariPip = typeof currentVideo.webkitSetPresentationMode === 'function';
+                if (isSafari && supportsSafariPip) {
+                    const mode = currentVideo.webkitPresentationMode;
+                    currentVideo.webkitSetPresentationMode(mode === 'picture-in-picture' ? 'inline' : 'picture-in-picture');
+                } else {
+                    if (document.pictureInPictureElement === currentVideo) {
+                        document.exitPictureInPicture().catch(err => console.warn(err));
+                        console.log("[chimo-chimo-loop]Exit PiP");
 
-    const createLoopButton = (video) => {
-        // Update loop icon to reflect current loop state
-        const updateLoopButton = () => {
-            const loopBase64 = video?.loop ? icons.disableLoop : icons.enableLoop;
-            btn.querySelector('picture').style.maskImage = `url('${loopBase64}')`;
+                    } else {
+                        currentVideo.requestPictureInPicture().catch(err => console.warn(err));
+                        console.log("[chimo-chimo-loop]Request PiP");
+                    }
+                }
+            };
+
+            const btn = this.createButton({ className: 'pip-button', onClick: togglePip });
+
+            return {
+                element: btn,
+                setVideo: (newVideo) => {
+                    currentVideo = newVideo;
+                    updatePipButton();
+                },
+                update: updatePipButton
+            };
         };
 
-        const toggleLoop = () => {
-            if (!video) {
-                console.log("[chimo-chimo-loop]Video not found");
-                return;
-            }
+        createLoopButton() {
+            let currentVideo = null;
 
-            video.loop = !video.loop;
-            updateLoopButton();
+            // Update loop icon to reflect current loop state
+            const updateLoopButton = () => {
+                if (!currentVideo) return;
+                btn.setAttribute('data-active', !!currentVideo.loop);
+            };
+
+            const toggleLoop = () => {
+                if (!currentVideo) {
+                    console.log("[chimo-chimo-loop]Video not found");
+                    return;
+                }
+
+                currentVideo.loop = !currentVideo.loop;
+                updateLoopButton();
+            };
+
+            const btn = this.createButton({ className: 'loop-button', onClick: toggleLoop });
+
+            return {
+                element: btn,
+                setVideo: (newVideo) => {
+                    currentVideo = newVideo;
+                    updateLoopButton();
+                },
+                update: updateLoopButton
+            };
         };
 
-        const btn = createButton({ className: 'loop-button', onClick: toggleLoop });
-        updateLoopButton();
+        buildButtonsContainer() {
+            const container = document.createElement('div');
+            container.classList.add('ccl-container');
 
-        return btn;
-    };
+            this.pipBtn = this.createPipButton();
+            this.loopBtn = this.createLoopButton();
 
-    const buildButtonsContainer = (video) => {
-        const buttonsContainer = document.createElement('div');
-        buttonsContainer.id = 'buttons-container';
-        buttonsContainer.classList.add('buttons-container');
+            if (this.pipBtn) container.append(this.pipBtn.element);
+            if (this.loopBtn) container.append(this.loopBtn.element);
 
-        const pipBtn = createPipButton(video);
-        const loopBtn = createLoopButton(video);
-
-        if (pipBtn) buttonsContainer.append(pipBtn);
-        if (loopBtn) buttonsContainer.append(loopBtn);
-
-        return buttonsContainer;
-    };
-
-    const buildControlsBar = (video) => {
-        const backgroundTint = buildBackgroundTint();
-        const buttonsContainer = buildButtonsContainer(video);
-
-        // Root element for the control bar
-        const controlsBar = document.createElement('div');
-        controlsBar.id = 'controls-bar';
-        controlsBar.classList.add('hidden', 'controls-bar');
-
-        controlsBar.append(backgroundTint, buttonsContainer);
-        return controlsBar;
-    };
-
-    const attachControls = (video, controlsBar) => {
-        // Attach to the video's parent if possible
-        const parent = video.parentElement || document.body;
-        const parentStyle = getComputedStyle(parent);
-
-        if (parentStyle.position === 'static') {
-            parent.style.position = 'relative';
-        }
-        parent.appendChild(controlsBar);
-    };
-
-    const setupAutoHide = (controlsBar, targetElement) => {
-        let hideTimeout;
-
-        const showControls = () => {
-            controlsBar.classList.remove('hidden');
-            controlsBar.classList.add('visible');
-
-            clearTimeout(hideTimeout);
-            hideTimeout = setTimeout(() => {
-                controlsBar.classList.remove('visible');
-                controlsBar.classList.add('hidden');
-            }, 3000);
+            return container;
         };
 
-        // Show controls on user interaction
-        targetElement.addEventListener('pointermove', showControls, { passive: true });
-        targetElement.addEventListener('touchstart', showControls, { passive: true });
-        showControls();
-    };
+        buildControlsBar() {
+            const bg = this.buildBackgroundTint();
+            const container = this.buildButtonsContainer();
 
-    const initializeControls = (video) => {
-        if (video.__chimoControlsAttached) return;
-        video.__chimoControlsAttached = true;
+            // Root element for the control bar
+            const controlsBar = document.createElement('div');
+            controlsBar.classList.add('hidden', 'ccl-bar');
 
-        injectStyle();
-
-        const controlsBar = buildControlsBar(video);
-        attachControls(video, controlsBar);
-
-        setupAutoHide(controlsBar, video.parentElement);
-    };
+            controlsBar.append(bg, container);
+            return controlsBar;
+        };
+    }
 
     // === Observers ===
     const observeVideoDom = () => {
-        let moTimer = null;
-
-        const observer = new MutationObserver((mutations) => {
-            if (!mutations.some(mutation => mutation.type === 'childList')) return;
-
-            if (moTimer) return;
-            moTimer = requestAnimationFrame(() => {
-                moTimer = null;
-                const video = getActiveVideo();
-                if (video) initializeControls(video);
-            });
+        const observer = new MutationObserver(() => {
+            const v = videoManager.currentVideo;
+            if (v && !v.isConnected) {
+                videoManager.detach('removed');
+            }
         });
         observer.observe(document.body, { childList: true, subtree: true });
     };
 
-    const setupGlobalPipEvents = () => {
-        document.addEventListener("enterpictureinpicture", updatePipButton);
-        document.addEventListener("leavepictureinpicture", updatePipButton);
+    // === Global events ===
+    const setupGlobalEvents = () => {
+        document.addEventListener('play', (e) => {
+            const video = e.target;
+            if (!(video instanceof HTMLVideoElement)) return;
+            videoManager.handleVideoActivation(video);
+        }, true);
+
+        document.addEventListener('pause', (e) => {
+            if (e.target === videoManager.currentVideo) {
+                videoManager.ui.hide();
+            }
+        }, true);
+
+        document.addEventListener('scroll', () => videoManager.ui.reposition(), { passive: true, capture: true });
+        window.addEventListener('resize', () => videoManager.ui.reposition(), { passive: true });
+
+        const handlePipChange = () => {
+            videoManager.ui.updateAllStyles();
+        };
+
+        document.addEventListener("enterpictureinpicture", handlePipChange, true);
+        document.addEventListener("leavepictureinpicture", handlePipChange, true);
+        document.addEventListener("webkitpresentationmodechanged", handlePipChange, true);
     };
 
-    // === Init ===
+    // === Main ===
     const main = () => {
-        setupGlobalPipEvents();
+        setupGlobalEvents();
         observeVideoDom();
+
+        const v = document.querySelector('video');
+        if (v) videoManager.handleVideoActivation(v);
     };
 
+    const videoManager = new VideoManager();
     main();
 })();
