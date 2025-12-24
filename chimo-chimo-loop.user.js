@@ -2,9 +2,9 @@
 // @name         chimo-chimo-loop
 // @name:zh-CN   chimo-chimo-loop
 // @namespace    https://github.com/ryu-dayo/chimo-chimo-loop
-// @version      1.0.0
-// @description  Adds Picture-in-Picture (PiP) and loop controls to supported HTML5 video players.
-// @description:zh-CN  为支持的网站的视频播放器添加画中画（PiP）和循环播放按钮。
+// @version      1.1.0
+// @description  Adds PiP, loop, and playback speed controls to HTML5 video players.
+// @description:zh-CN  为 HTML5 视频播放器添加画中画（PiP）、循环播放和倍速控制按钮。
 // @author       ryu-dayo
 // @match        https://www.douyin.com/*
 // @match        https://www.instagram.com/*
@@ -25,6 +25,7 @@
         exitPip: 'data:image/svg+xml,%3Csvg%20width%3D%22101%22%20height%3D%2282%22%20viewBox%3D%220%200%20101%2082%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M12.4512%2063.2813H68.2129C76.5625%2063.2813%2080.6641%2059.2285%2080.6641%2051.0254V12.2559C80.6641%204.0527%2076.5625%200%2068.2129%200H12.4512C4.10158%200%200%204.0527%200%2012.2559V51.0254C0%2059.2285%204.10158%2063.2813%2012.4512%2063.2813ZM7.03128%2050.6348V12.6465C7.03128%208.9356%209.03318%207.0313%2012.5489%207.0313H68.1153C71.6309%207.0313%2073.6328%208.9356%2073.6328%2012.6465V50.6348C73.6328%2054.3457%2071.6309%2056.25%2068.1153%2056.25H12.5489C9.03318%2056.25%207.03128%2054.3457%207.03128%2050.6348Z%22%20fill%3D%22black%22%2F%3E%3Cpath%20d%3D%22M15.1366%2029.8827C15.2831%2031.1034%2016.9433%2032.4706%2018.5058%2030.8593L22.6562%2026.7577L28.5644%2032.6171C29.5898%2033.6425%2031.2988%2033.6425%2032.3241%2032.6171C33.3495%2031.5917%2033.3495%2029.8827%2032.3241%2028.8573L26.4648%2022.9491L30.5663%2018.7987C32.1777%2017.2362%2030.8105%2015.5761%2029.5409%2015.4296L15.4784%2013.33C14.746%2013.2323%2014.1113%2013.4765%2013.623%2013.9159C13.1835%2014.4042%2012.9394%2015.0878%2013.037%2015.7714L15.1366%2029.8827Z%22%20fill%3D%22black%22%2F%3E%3Cpath%20d%3D%22M50.4883%2081.6407H87.6953C95.9964%2081.6407%20100.146%2077.5879%20100.146%2069.3848V44.7754C100.146%2036.6211%2095.9964%2032.5195%2087.6953%2032.5195H50.4883C42.1875%2032.5195%2038.0371%2036.5723%2038.0371%2044.7754V69.3848C38.0371%2077.5879%2042.1875%2081.6407%2050.4883%2081.6407Z%22%20fill%3D%22black%22%2F%3E%3C%2Fsvg%3E',
         enableLoop: 'data:image/svg+xml,%3Csvg%20width%3D%2299%22%20height%3D%2266%22%20viewBox%3D%220%200%2099%2066%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M28.1739%2065.8691H70.6543C87.6953%2065.8691%2098.8284%2054.834%2098.8284%2037.7441C98.8284%2020.6543%2087.6953%209.47259%2070.6543%209.47259H62.2559C60.3028%209.47259%2058.7403%2011.084%2058.7403%2012.9883C58.7403%2014.9414%2060.3028%2016.5527%2062.2559%2016.5527H70.6543C83.252%2016.5527%2091.7964%2025.1465%2091.7964%2037.7441C91.7964%2050.3418%2083.252%2058.8379%2070.6543%2058.8379H28.1739C15.5274%2058.8379%207.03128%2050.3418%207.03128%2037.7441C7.03128%2025.1465%2015.5274%2016.5527%2028.1739%2016.5527H33.3496C33.1055%2015.332%2032.959%2014.0625%2032.959%2012.7441C32.959%2011.6699%2033.0567%2010.5957%2033.252%209.52149L28.1739%209.47259C11.0352%209.32619%200%2020.6543%200%2037.7441C0%2054.834%2011.0352%2065.8691%2028.1739%2065.8691Z%22%20fill%3D%22black%22%2F%3E%3Cpath%20d%3D%22M51.3672%2025.4394C58.4473%2025.4394%2064.1114%2019.7266%2064.1114%2012.6953C64.1114%205.6641%2058.4473%200%2051.3672%200C44.336%200%2038.6719%205.6641%2038.6719%2012.6953C38.6719%2019.7266%2044.336%2025.4394%2051.3672%2025.4394ZM51.3672%2018.6035C48.0957%2018.6035%2045.5078%2015.9668%2045.5078%2012.6953C45.5078%209.375%2048.0957%206.8359%2051.3672%206.8359C54.7364%206.8359%2057.2754%209.375%2057.2754%2012.6953C57.2754%2015.9668%2054.7364%2018.6035%2051.3672%2018.6035Z%22%20fill%3D%22black%22%2F%3E%3C%2Fsvg%3E',
         disableLoop: 'data:image/svg+xml,%3Csvg%20width%3D%2299%22%20height%3D%2266%22%20viewBox%3D%220%200%2099%2066%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M28.1739%2065.8691H70.6543C87.6953%2065.8691%2098.8284%2054.834%2098.8284%2037.7441C98.8284%2020.6543%2087.6953%209.47259%2070.6543%209.47259H62.2559C60.3028%209.47259%2058.7403%2011.084%2058.7403%2012.9883C58.7403%2014.9414%2060.3028%2016.5527%2062.2559%2016.5527H70.6543C83.252%2016.5527%2091.7964%2025.1465%2091.7964%2037.7441C91.7964%2050.3418%2083.252%2058.8379%2070.6543%2058.8379H28.1739C15.5274%2058.8379%207.03128%2050.3418%207.03128%2037.7441C7.03128%2025.1465%2015.5274%2016.5527%2028.1739%2016.5527H33.3496C33.1055%2015.332%2032.959%2014.0625%2032.959%2012.7441C32.959%2011.6699%2033.0567%2010.5957%2033.252%209.52149L28.1739%209.47259C11.0352%209.32619%200%2020.6543%200%2037.7441C0%2054.834%2011.0352%2065.8691%2028.1739%2065.8691Z%22%20fill%3D%22black%22%2F%3E%3Cpath%20d%3D%22M51.3672%2025.4394C58.4473%2025.4394%2064.1114%2019.7266%2064.1114%2012.6953C64.1114%205.6641%2058.4473%200%2051.3672%200C44.336%200%2038.6719%205.6641%2038.6719%2012.6953C38.6719%2019.7266%2044.336%2025.4394%2051.3672%2025.4394Z%22%20fill%3D%22black%22%2F%3E%3C%2Fsvg%3E',
+        playbackRate: 'data:image/svg+xml,%3Csvg%20width%3D%2279%22%20height%3D%2279%22%20viewBox%3D%220%200%2079%2079%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M39.4043%2078.8086C61.1817%2078.8086%2078.8575%2061.1816%2078.8575%2039.4043C78.8575%2017.627%2061.1817%200%2039.4043%200C17.6758%200%200%2017.627%200%2039.4043C0%2061.1816%2017.6758%2078.8086%2039.4043%2078.8086ZM39.4043%2071.3867C21.7286%2071.3867%207.47066%2057.0801%207.47066%2039.4043C7.47066%2021.7285%2021.7286%207.42191%2039.4043%207.42191C57.0801%207.42191%2071.3868%2021.7285%2071.3868%2039.4043C71.3868%2057.0801%2057.0801%2071.3867%2039.4043%2071.3867Z%22%20fill%3D%22black%22%2F%3E%3Cpath%20d%3D%22M24.3653%2057.8125C26.3184%2057.8125%2027.9297%2056.2012%2027.9297%2054.248C27.9297%2052.2949%2026.3184%2050.6836%2024.3653%2050.6836C22.4121%2050.6836%2020.8008%2052.2949%2020.8008%2054.248C20.8008%2056.2012%2022.4121%2057.8125%2024.3653%2057.8125ZM18.1641%2042.9687C20.1172%2042.9687%2021.7286%2041.3574%2021.7286%2039.4043C21.7286%2037.4512%2020.1172%2035.8398%2018.1641%2035.8398C16.211%2035.8398%2014.5508%2037.4512%2014.5508%2039.4043C14.5508%2041.3574%2016.211%2042.9687%2018.1641%2042.9687ZM24.3653%2028.125C26.3184%2028.125%2027.9297%2026.5137%2027.9297%2024.5605C27.9297%2022.6074%2026.3184%2020.9961%2024.3653%2020.9961C22.4121%2020.9961%2020.8008%2022.6074%2020.8008%2024.5605C20.8008%2026.5137%2022.4121%2028.125%2024.3653%2028.125ZM39.3555%2021.7773C41.3086%2021.7773%2042.9688%2020.166%2042.9688%2018.2129C42.9688%2016.2598%2041.3086%2014.6484%2039.3555%2014.6484C37.4024%2014.6484%2035.7911%2016.2598%2035.7911%2018.2129C35.7911%2020.166%2037.4024%2021.7773%2039.3555%2021.7773ZM60.4981%2042.9687C62.4512%2042.9687%2064.1114%2041.3574%2064.1114%2039.4043C64.1114%2037.4512%2062.4512%2035.8398%2060.4981%2035.8398C58.545%2035.8398%2056.9336%2037.4512%2056.9336%2039.4043C56.9336%2041.3574%2058.545%2042.9687%2060.4981%2042.9687ZM54.2969%2057.8125C56.25%2057.8125%2057.8614%2056.2012%2057.8614%2054.248C57.8614%2052.2949%2056.25%2050.6836%2054.2969%2050.6836C52.3438%2050.6836%2050.7325%2052.2949%2050.7325%2054.248C50.7325%2056.2012%2052.3438%2057.8125%2054.2969%2057.8125ZM32.8614%2045.8008C35.5469%2048.4863%2039.3067%2048.4863%2041.9922%2045.8008C42.5293%2045.2637%2043.3106%2044.1406%2043.7989%2043.457L56.3477%2025.0488C57.0801%2023.9746%2056.836%2022.998%2056.25%2022.3633C55.6641%2021.7773%2054.6387%2021.582%2053.6133%2022.2656L35.1563%2034.8144C34.5215%2035.3027%2033.3496%2036.1328%2032.8614%2036.6211C30.1758%2039.3066%2030.1758%2043.1152%2032.8614%2045.8008Z%22%20fill%3D%22black%22%2F%3E%3C%2Fsvg%3E',
     };
 
     const CONTROL_BTN_SIZE = 16;
@@ -115,6 +116,7 @@
 
             this.pipBtn = null;
             this.loopBtn = null;
+            this.rateBtn = null;
 
             this._boundGlobalHandler = this.throttle(this.handleGlobalPointer.bind(this), 400);
             this._boundReposition = this.reposition.bind(this);
@@ -147,6 +149,7 @@
 
             this.pipBtn?.setVideo(video);
             this.loopBtn?.setVideo(video);
+            this.rateBtn?.setVideo(video);
 
             window.addEventListener('pointermove', this._boundGlobalHandler, { passive: true });
 
@@ -264,7 +267,7 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            border-radius: 8px;
+            border-radius: 24px;
             pointer-events: none;
             }
 
@@ -279,7 +282,7 @@
             mix-blend-mode: lighten;
             }
 
-            .pip-button, .loop-button {
+            .pip-button, .loop-button, .rate-button {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -294,6 +297,7 @@
             .pip-button[data-active="true"] { --icon: url('${icons.exitPip}'); }
             .loop-button { --icon: url('${icons.enableLoop}'); }
             .loop-button[data-active="true"] { --icon: url('${icons.disableLoop}'); }
+            .rate-button { --icon: url('${icons.playbackRate}'); }
 
             .ccl-icon {
             background-color: rgba(255, 255, 255, 1);
@@ -308,7 +312,8 @@
             }
 
             .pip-button:active picture,
-            .loop-button:active picture {
+            .loop-button:active picture,
+            .rate-button:active picture {
             transform: scale(0.89);
             }
 
@@ -330,6 +335,70 @@
             opacity: 1;
             pointer-events: auto;
             transition: opacity 0.3s ease;
+            }
+
+            .ccl-menu {
+            position: absolute;
+            top: 50%;
+            left: 80%;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding: 8px;
+            border-radius: 8px;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: saturate(180%) blur(17.5px);
+            -webkit-backdrop-filter: saturate(180%) blur(17.5px);
+            opacity: 0;
+            pointer-events: auto !important;
+            transition: opacity 0.2s ease;
+            }
+
+            .ccl-menu.visible {
+            opacity: 1;
+            }
+
+            .ccl-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            font-size: 14px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            }
+
+            .ccl-menu-item:hover {
+            background: rgba(255, 255, 255, 0.2) !important;
+            }
+
+            .ccl-menu-item:active {
+                color: rgba(255, 255, 255, 0.5);
+                font-weight: bold;
+            }
+
+            .ccl-menu-item::before {
+                content: '✓';
+                visibility: hidden;
+                color: white;
+                font-weight: bold;
+                width: 12px;
+            }
+
+            .ccl-menu-item.active::before {
+                visibility: visible;
+            }
+
+            .ccl-overlay {
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            width: 100vw;
+            height: 100vh;
+            z-index: 998;
+            background: transparent;
             }
             `;
             document.head.appendChild(style);
@@ -358,7 +427,6 @@
 
             const button = document.createElement('button');
             button.classList.add(className);
-            button.style.pointerEvents = 'auto';
 
             button.append(picture);
             button.addEventListener('click', (e) => {
@@ -473,15 +541,88 @@
             };
         };
 
+        createRateButton() {
+            let currentVideo = null;
+            const rates = [0.5, 1, 1.25, 1.5, 2];
+
+            const menu = document.createElement('div');
+            menu.classList.add('ccl-menu');
+
+            const overlay = document.createElement('div');
+            overlay.classList.add('ccl-overlay');
+            overlay.style.display = 'none';
+            
+            document.body.append(overlay);
+
+            const closeMenu = (e) => {
+                if (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                menu.classList.remove('visible');
+                overlay.style.display = 'none';
+                this.controlsBar.style.pointerEvents = 'auto';
+            };
+
+            const openMenu = () => {
+                overlay.style.display = 'block';
+                menu.classList.add('visible');
+                this.controlsBar.style.pointerEvents = 'none';
+                updateMenuState();
+            };
+
+            const updateMenuState = () => {
+                if (!currentVideo) return;
+                const currentRate = currentVideo.playbackRate;
+
+                Array.from(menu.children).forEach(item => {
+                    const itemRate = parseFloat(item.dataset.rate);
+                    item.classList.toggle('active', Math.abs(itemRate - currentRate) < 0.01);
+                });
+            };
+
+            rates.forEach(rate => {
+                const item = document.createElement('div');
+                item.classList.add('ccl-menu-item');
+                item.textContent = rate + 'x';
+                item.dataset.rate = rate;
+                item.onclick = (e) => {
+                    e.stopPropagation();
+                    if (currentVideo) {
+                        currentVideo.playbackRate = rate;
+                        console.log(`[chimo-chimo-loop]Speed set to ${rate}x`);
+                    }
+                    menu.classList.remove('visible');
+                };
+                menu.appendChild(item);
+            });
+
+            overlay.addEventListener('click', closeMenu, true);
+
+            const btn = this.createButton({ className: 'rate-button', onClick: openMenu });
+            btn.appendChild(menu);
+
+            return {
+                element: btn,
+                setVideo: (newVideo) => {
+                    currentVideo = newVideo;
+                    updateMenuState();
+                },
+                update: updateMenuState
+            };
+        };
+
         buildButtonsContainer() {
             const container = document.createElement('div');
             container.classList.add('ccl-container');
 
             this.pipBtn = this.createPipButton();
             this.loopBtn = this.createLoopButton();
+            this.rateBtn = this.createRateButton();
 
             if (this.pipBtn) container.append(this.pipBtn.element);
             if (this.loopBtn) container.append(this.loopBtn.element);
+            if (this.rateBtn) container.append(this.rateBtn.element);
 
             return container;
         };
