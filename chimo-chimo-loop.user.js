@@ -29,10 +29,6 @@
         playbackRate: 'data:image/svg+xml,%3Csvg%20width%3D%2279%22%20height%3D%2279%22%20viewBox%3D%220%200%2079%2079%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M39.4043%2078.8086C61.1817%2078.8086%2078.8575%2061.1816%2078.8575%2039.4043C78.8575%2017.627%2061.1817%200%2039.4043%200C17.6758%200%200%2017.627%200%2039.4043C0%2061.1816%2017.6758%2078.8086%2039.4043%2078.8086ZM39.4043%2071.3867C21.7286%2071.3867%207.47066%2057.0801%207.47066%2039.4043C7.47066%2021.7285%2021.7286%207.42191%2039.4043%207.42191C57.0801%207.42191%2071.3868%2021.7285%2071.3868%2039.4043C71.3868%2057.0801%2057.0801%2071.3867%2039.4043%2071.3867Z%22%20fill%3D%22black%22%2F%3E%3Cpath%20d%3D%22M24.3653%2057.8125C26.3184%2057.8125%2027.9297%2056.2012%2027.9297%2054.248C27.9297%2052.2949%2026.3184%2050.6836%2024.3653%2050.6836C22.4121%2050.6836%2020.8008%2052.2949%2020.8008%2054.248C20.8008%2056.2012%2022.4121%2057.8125%2024.3653%2057.8125ZM18.1641%2042.9687C20.1172%2042.9687%2021.7286%2041.3574%2021.7286%2039.4043C21.7286%2037.4512%2020.1172%2035.8398%2018.1641%2035.8398C16.211%2035.8398%2014.5508%2037.4512%2014.5508%2039.4043C14.5508%2041.3574%2016.211%2042.9687%2018.1641%2042.9687ZM24.3653%2028.125C26.3184%2028.125%2027.9297%2026.5137%2027.9297%2024.5605C27.9297%2022.6074%2026.3184%2020.9961%2024.3653%2020.9961C22.4121%2020.9961%2020.8008%2022.6074%2020.8008%2024.5605C20.8008%2026.5137%2022.4121%2028.125%2024.3653%2028.125ZM39.3555%2021.7773C41.3086%2021.7773%2042.9688%2020.166%2042.9688%2018.2129C42.9688%2016.2598%2041.3086%2014.6484%2039.3555%2014.6484C37.4024%2014.6484%2035.7911%2016.2598%2035.7911%2018.2129C35.7911%2020.166%2037.4024%2021.7773%2039.3555%2021.7773ZM60.4981%2042.9687C62.4512%2042.9687%2064.1114%2041.3574%2064.1114%2039.4043C64.1114%2037.4512%2062.4512%2035.8398%2060.4981%2035.8398C58.545%2035.8398%2056.9336%2037.4512%2056.9336%2039.4043C56.9336%2041.3574%2058.545%2042.9687%2060.4981%2042.9687ZM54.2969%2057.8125C56.25%2057.8125%2057.8614%2056.2012%2057.8614%2054.248C57.8614%2052.2949%2056.25%2050.6836%2054.2969%2050.6836C52.3438%2050.6836%2050.7325%2052.2949%2050.7325%2054.248C50.7325%2056.2012%2052.3438%2057.8125%2054.2969%2057.8125ZM32.8614%2045.8008C35.5469%2048.4863%2039.3067%2048.4863%2041.9922%2045.8008C42.5293%2045.2637%2043.3106%2044.1406%2043.7989%2043.457L56.3477%2025.0488C57.0801%2023.9746%2056.836%2022.998%2056.25%2022.3633C55.6641%2021.7773%2054.6387%2021.582%2053.6133%2022.2656L35.1563%2034.8144C34.5215%2035.3027%2033.3496%2036.1328%2032.8614%2036.6211C30.1758%2039.3066%2030.1758%2043.1152%2032.8614%2045.8008Z%22%20fill%3D%22black%22%2F%3E%3C%2Fsvg%3E',
     };
 
-    const CONTROL_BTN_SIZE = 16;
-
-    const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
-
     // === Model ===
     class VideoManager {
         constructor() {
@@ -110,7 +106,9 @@
     // === UI ===
     class UIController {
         constructor() {
+            this.container = null;
             this.controlsBar = null;
+            this.infoContainer = null;
             this.boundVideo = null;
             this.hideTimeout = null;
             this.pollingInterval = null;
@@ -138,21 +136,49 @@
         }
 
         ensureUI() {
-            if (!this.controlsBar) {
-                this.injectStyle();
-                this.controlsBar = this.buildControlsBar();
-                document.body.appendChild(this.controlsBar);
-            }
+            if (this.container) return;
+            this.injectStyle();
+
+            const handleMenuToggle = (isOpen) => {
+                if (this.controlsBar) {
+                    this.controlsBar.style.pointerEvents = isOpen ? 'none' : 'auto';
+                }
+            };
+
+            this.pipBtn = this.createPipButton();
+            this.loopBtn = this.createLoopButton();
+            this.infoBtn = this.createInfoButton(() => {
+                if (!this.infoContainer) return;
+
+                const isVisible = this.infoContainer.classList.toggle('visible');
+                if (isVisible) {
+                    this.updateInfoStats();
+                }
+            });
+            this.rateBtn = this.createRateButton(handleMenuToggle);
+
+            const buttons = [
+                this.pipBtn?.element,
+                this.loopBtn?.element,
+                this.infoBtn?.element,
+                this.rateBtn?.element
+            ].filter(Boolean);
+
+            this.controlsBar = this.buildControlsBar(buttons);
+            this.infoContainer = this.buildInfoContainer();
+
+            this.container = this.builControlsContainer();
+            this.container.append(this.controlsBar, this.infoContainer)
+
+            document.body.appendChild(this.container);
         }
 
         attach(video) {
             this.ensureUI();
             this.boundVideo = video;
 
-            this.pipBtn?.setVideo(video);
-            this.loopBtn?.setVideo(video);
-            this.infoBtn?.setVideo(video);
-            this.rateBtn?.setVideo(video);
+            [this.pipBtn, this.loopBtn, this.infoBtn, this.rateBtn].forEach(btn => btn?.setVideo(video));
+            this.infoContainer.classList.remove('visible');
 
             window.addEventListener('pointermove', this._boundGlobalHandler, { passive: true });
 
@@ -171,11 +197,14 @@
         }
 
         reposition() {
-            if (!this.boundVideo || !this.controlsBar) return;
+            if (!this.boundVideo || !this.container) return;
 
             const rect = this.boundVideo.getBoundingClientRect();
             if (!rect.width || !rect.height) return;
-            this.controlsBar.style.transform = `translate(${rect.left + 6}px, ${rect.top + 6}px)`;
+            this.container.style.top = `${rect.top + window.scrollY}px`;
+            this.container.style.left = `${rect.left + window.scrollX}px`;
+            this.container.style.width = `${rect.width}px`;
+            this.container.style.height = `${rect.height}px`;
         }
 
         handleGlobalPointer(e) {
@@ -188,7 +217,7 @@
                 e.clientY >= rect.top &&
                 e.clientY <= rect.bottom
             );
-            const isOverControls = this.controlsBar.contains(e.target);
+            const isOverControls = this.container.contains(e.target);
             if (isOverVideo || isOverControls) {
                 this.showAndTimer();
             }
@@ -246,139 +275,158 @@
 
         updateAllStyles() {
             if (!this.boundVideo || !this.controlsBar) return;
-            this.pipBtn?.update();
-            this.loopBtn?.update();
-            this.infoBtn?.update();
-            this.rateBtn?.update();
+            [this.pipBtn, this.loopBtn, this.infoBtn, this.rateBtn].forEach(btn => btn?.update());
         }
+
+        updateInfoStats() {
+            if (!this.boundVideo) return;
+
+            const getSourceType = () => {
+                const src = this.boundVideo.currentSrc;
+                if (src.startsWith('blob:')) return 'Media Source';
+                if (src.includes('m3u8')) return 'HLS';
+                return 'File';
+            };
+
+            const data = {
+                'Source': getSourceType(),
+                'Viewport': `${this.boundVideo.clientWidth}×${this.boundVideo.clientHeight} (${window.devicePixelRatio}x)`,
+                'Resolution': `${this.boundVideo.videoWidth}×${this.boundVideo.videoHeight}`
+            };
+
+            const table = this.infoContainer.querySelector('table');
+            table.textContent = '';
+            for (const [key, val] of Object.entries(data)) {
+                const row = document.createElement('tr');
+                const th = document.createElement('th');
+                th.textContent = key;
+                const td = document.createElement('td');
+                td.textContent = val;
+
+                row.append(th, td);
+                table.appendChild(row);
+            }
+        };
 
         injectStyle() {
             if (document.getElementById('ccl-style')) return;
             const style = document.createElement('style');
             style.id = 'ccl-style';
             style.textContent = `
+            .ccl-controls-container {
+                position: absolute;
+                z-index: 999;
+                display: block;
+                pointer-events: none;
+            }
+
             .ccl-bar {
-            position: fixed;
-            top: 6px;
-            left: 6px;
-            z-index: 999;
-            display: inline-flex;
-            will-change: z-index;
-            cursor: default;
-            height: 31px;
+                position: absolute;
+                top: 6px;
+                left: 6px;
+                display: inline-flex;
+                will-change: transform;
+                height: 31px;
             }
 
             .ccl-bg, .ccl-bg > div {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 24px;
-            pointer-events: none;
+                position: absolute;
+                inset: 0;
+                border-radius: 24px;
+                pointer-events: none;
             }
 
             .ccl-bg > .blur {
-            background-color: rgba(0, 0, 0, 0.55);
-            backdrop-filter: saturate(180%) blur(17.5px);
-            -webkit-backdrop-filter: saturate(180%) blur(17.5px);
+                background-color: rgba(255, 255, 255, 0.14);
+                backdrop-filter: saturate(180%) blur(17.5px);
+                -webkit-backdrop-filter: saturate(180%) blur(17.5px);
             }
 
-            .ccl-bg > .tint {
-            background-color: rgba(255, 255, 255, 0.14);
-            mix-blend-mode: lighten;
+            .ccl-btn-container > button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-width: 0;
+                padding: 0;
+                cursor: pointer;
+                background-color: transparent !important;
+                transition: opacity 0.1s linear;
             }
 
-            .pip-button, .loop-button, .info-button, .rate-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-            border-width: 0;
-            background-color: transparent !important;
-            appearance: none;
-            transition: opacity 0.1s linear;
+            .pip-btn { --icon: url('${icons.enterPip}'); }
+            .pip-btn[data-active="true"] { --icon: url('${icons.exitPip}'); }
+            .loop-btn { --icon: url('${icons.enableLoop}'); }
+            .loop-btn[data-active="true"] { --icon: url('${icons.disableLoop}'); }
+            .info-btn { --icon: url('${icons.info}'); }
+            .rate-btn { --icon: url('${icons.playbackRate}'); }
+
+            .ccl-btn-container picture {
+                width: 16px;
+                height: 16px;
+                background-color: white;
+                mix-blend-mode: plus-lighter;
+                mask-image: var(--icon);
+                mask-size: 100% 100%;
+                mask-repeat: no-repeat;
+                transition: transform 150ms;
+                pointer-events: none;
             }
 
-            .pip-button { --icon: url('${icons.enterPip}'); }
-            .pip-button[data-active="true"] { --icon: url('${icons.exitPip}'); }
-            .loop-button { --icon: url('${icons.enableLoop}'); }
-            .loop-button[data-active="true"] { --icon: url('${icons.disableLoop}'); }
-            .info-button { --icon: url('${icons.info}'); }
-            .rate-button { --icon: url('${icons.playbackRate}'); }
+            .ccl-btn-container > button:active picture { transform: scale(0.89); }
 
-            .ccl-icon {
-            background-color: rgba(255, 255, 255, 1);
-            mix-blend-mode: plus-lighter;
-            mask-size: 100% 100%;
-            mask-repeat: no-repeat;
-            mask-image: var(--icon);
-            -webkit-mask-image: var(--icon);
-            transition: transform 150ms;
-            will-change: transform;
-            pointer-events: none;
-            }
-
-            .pip-button:active picture,
-            .loop-button:active picture,
-            .rate-button:active picture,
-            .info-button:active picture {
-            transform: scale(0.89);
-            }
-
-            .ccl-container {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            align-items: center;
-            padding: 0 16px;
+            .ccl-btn-container {
+                display: flex;
+                gap: 16px;
+                justify-content: center;
+                align-items: center;
+                padding: 0 16px;
             }
 
             .ccl-bar.hidden {
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s ease;
             }
 
             .ccl-bar.visible {
-            opacity: 1;
-            pointer-events: auto;
-            transition: opacity 0.3s ease;
+                opacity: 1;
+                pointer-events: auto;
+                transition: opacity 0.3s ease;
             }
 
             .ccl-menu {
-            position: absolute;
-            top: 50%;
-            left: 80%;
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            padding: 8px;
-            border-radius: 6px;
-            background-color: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            opacity: 0;
-            pointer-events: auto !important;
-            transition: opacity 0.2s ease;
+                position: absolute;
+                top: 50%;
+                left: 80%;
+                display: none;
+                flex-direction: column;
+                gap: 2px;
+                padding: 8px;
+                background-color: hsla(0, 0%, 25%, 0.6);
+                transition: opacity 0.2s ease;
+                border-radius: 6px;
+                backdrop-filter: blur(5px);
+                -webkit-backdrop-filter: blur(5px);
             }
 
-            .ccl-menu.visible {
-            opacity: 1;
-            }
+            .ccl-menu.visible { display: flex; }
 
             .ccl-menu-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: white;
-            font-size: 12px;
-            padding: 4px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.2s;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                color: white;
+                font-size: 12px;
+                font-family: sans-serif;
+                padding: 4px 12px;
+                border-radius: 6px;
+                cursor: pointer;
+                transition: background 0.2s;
+                pointer-events: auto;
             }
 
             .ccl-menu-item:hover {
-            background: rgba(255, 255, 255, 0.2) !important;
+                background: rgba(255, 255, 255, 0.2) !important;
             }
 
             .ccl-menu-item:active {
@@ -399,47 +447,45 @@
             }
 
             .ccl-overlay {
-            position: fixed;
-            top: 0px;
-            left: 0px;
-            width: 100vw;
-            height: 100vh;
-            z-index: 998;
-            background: transparent;
+                position: fixed;
+                top: 0px;
+                left: 0px;
+                width: 100vw;
+                height: 100vh;
+                z-index: 998;
+                background: transparent;
             }
 
-            .ccl-info-panel {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: hsl(0, 0%, 95%);
-            background-color: hsla(0, 0%, 25%, 0.6);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            border-radius: 6px;
-            padding: 4px;
-            font-size: 12px;
-            border-spacing: 2px;
-            pointer-events: none;
-            display: none;
-            z-index: 999;
+            .ccl-info-container {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                justify-content: center;
+                align-items: center;
+                pointer-events: none;
+                display: none;
+                z-index: 999;
             }
 
-            .ccl-info-panel.visible {
-            display: table;
+            .ccl-info-container.visible { display: flex; }
+
+            .ccl-info-container > table {
+                padding: 4px;
+                background-color: hsla(0, 0%, 25%, 0.6);
+                border-radius: 6px;
+                backdrop-filter: blur(5px);
+                -webkit-backdrop-filter: blur(5px);
             }
 
-            .ccl-info-panel > tr {
-            display: table-row;
-            vertical-align: middle;
+            .ccl-info-container th {
+                padding-inline-end: 6px;
+                text-align: end;
             }
 
-            .ccl-info-panel > tr > th {
-            display: table-cell;
-            text-align: end;
-            padding-inline-end: 4px;
-            font-weight: bold;
+            .ccl-info-container th, .ccl-info-container td {
+                font-size: 12px;
+                font-family: sans-serif;
+                color: hsl(0, 0%, 95%);
             }
             `;
             document.head.appendChild(style);
@@ -453,30 +499,24 @@
             const blur = document.createElement('div');
             blur.classList.add('blur');
 
-            const tint = document.createElement('div');
-            tint.classList.add('tint');
-
-            backgroundTint.append(blur, tint);
+            backgroundTint.appendChild(blur);
             return backgroundTint;
         };
 
-        createButton({ className, onClick }) {
+        createButton({ cls, onClick }) {
             const picture = document.createElement('picture');
-            picture.classList.add('ccl-icon');
-            picture.style.width = `${CONTROL_BTN_SIZE}px`;
-            picture.style.height = `${CONTROL_BTN_SIZE}px`;
 
-            const button = document.createElement('button');
-            button.classList.add(className);
+            const btn = document.createElement('button');
+            btn.classList.add(cls);
 
-            button.append(picture);
-            button.addEventListener('click', (e) => {
+            btn.append(picture);
+            btn.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 onClick?.();
             });
 
-            return button;
+            return btn;
         };
 
         // Ensure PiP attributes and iframe permissions are set
@@ -523,6 +563,7 @@
                 }
                 this.ensurePipEnabled(currentVideo)
 
+                const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
                 const supportsSafariPip = typeof currentVideo.webkitSetPresentationMode === 'function';
                 if (isSafari && supportsSafariPip) {
                     const mode = currentVideo.webkitPresentationMode;
@@ -539,7 +580,7 @@
                 }
             };
 
-            const btn = this.createButton({ className: 'pip-button', onClick: togglePip });
+            const btn = this.createButton({ cls: 'pip-btn', onClick: togglePip });
 
             return {
                 element: btn,
@@ -570,7 +611,7 @@
                 updateLoopButton();
             };
 
-            const btn = this.createButton({ className: 'loop-button', onClick: toggleLoop });
+            const btn = this.createButton({ cls: 'loop-btn', onClick: toggleLoop });
 
             return {
                 element: btn,
@@ -582,56 +623,23 @@
             };
         };
 
-        createInfoButton() {
-            let currentVideo = null;
-
-            const panel = document.createElement('div');
-            panel.classList.add('ccl-info-panel');
-
-            const updateStats = () => {
-                if (!currentVideo || !panel.classList.contains('visible')) return;
-
-                const getSourceType = () => {
-                    const src = currentVideo.currentSrc;
-                    if (src.startsWith('blob:')) return 'Media Source';
-                    if (src.includes('m3u8')) return 'HLS';
-                    return 'HTML5';
-                };
-
-                const data = {
-                    'Source': getSourceType(),
-                    'Viewport': `${currentVideo.clientWidth}×${currentVideo.clientHeight} (${window.devicePixelRatio}x)`,
-                    'Resolution': `${currentVideo.videoWidth}×${currentVideo.videoHeight}`
-                };
-
-                panel.innerHTML = '';
-                for (const [key, val] of Object.entries(data)) {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `<th>${key}</th><td>${val}</td>`;
-                    panel.append(row);
-                }
-            };
+        createInfoButton(onClickCallback) {
 
             const btn = this.createButton({
-                className: 'info-button',
+                cls: 'info-btn',
                 onClick: () => {
-                    if (!currentVideo) return;
-                    const isVisible = panel.classList.toggle('visible');
-                    if (isVisible) {
-                        currentVideo.parentNode.appendChild(panel);
-                        updateStats();
-                    }
+                    if (typeof onClickCallback === 'function') onClickCallback();
                 }
             });
 
             return {
                 element: btn,
-                setVideo: (newVideo) => { currentVideo = newVideo; },
-                update: () => { return; }
+                setVideo: (newVideo) => {},
+                update: () => { }
             };
         }
 
-        createRateButton() {
+        createRateButton(onMenuToggle) {
             let currentVideo = null;
             const rates = [0.5, 1, 1.25, 1.5, 2];
 
@@ -651,13 +659,13 @@
                 }
                 menu.classList.remove('visible');
                 overlay.style.display = 'none';
-                this.controlsBar.style.pointerEvents = 'auto';
+                if (onMenuToggle) onMenuToggle(false);
             };
 
             const openMenu = () => {
                 overlay.style.display = 'block';
                 menu.classList.add('visible');
-                this.controlsBar.style.pointerEvents = 'none';
+                if (onMenuToggle) onMenuToggle(true);
                 updateMenuState();
             };
 
@@ -682,14 +690,14 @@
                         currentVideo.playbackRate = rate;
                         console.log(`[chimo-chimo-loop]Speed set to ${rate}x`);
                     }
-                    menu.classList.remove('visible');
+                    closeMenu();
                 };
                 menu.appendChild(item);
             });
 
             overlay.addEventListener('click', closeMenu, true);
 
-            const btn = this.createButton({ className: 'rate-button', onClick: openMenu });
+            const btn = this.createButton({ cls: 'rate-btn', onClick: openMenu });
             btn.appendChild(menu);
 
             return {
@@ -698,30 +706,30 @@
                     currentVideo = newVideo;
                     updateMenuState();
                 },
-                update: () => { return; }
+                update: () => { }
             };
+        };
+
+        buildInfoContainer() {
+            const container = document.createElement('div');
+            container.classList.add('ccl-info-container');
+            const table = document.createElement('table');
+            container.append(table);
+            return container;
         };
 
         buildButtonsContainer() {
             const container = document.createElement('div');
-            container.classList.add('ccl-container');
-
-            this.pipBtn = this.createPipButton();
-            this.loopBtn = this.createLoopButton();
-            this.infoBtn = this.createInfoButton();
-            this.rateBtn = this.createRateButton();
-
-            if (this.pipBtn) container.append(this.pipBtn.element);
-            if (this.loopBtn) container.append(this.loopBtn.element);
-            if (this.infoBtn) container.append(this.infoBtn.element);
-            if (this.rateBtn) container.append(this.rateBtn.element);
+            container.classList.add('ccl-btn-container');
 
             return container;
         };
 
-        buildControlsBar() {
+        buildControlsBar(buttonElements) {
             const bg = this.buildBackgroundTint();
             const container = this.buildButtonsContainer();
+
+            buttonElements.forEach(el => container.appendChild(el));
 
             // Root element for the control bar
             const controlsBar = document.createElement('div');
@@ -729,6 +737,13 @@
 
             controlsBar.append(bg, container);
             return controlsBar;
+        };
+
+        builControlsContainer() {
+            const controlsContainer = document.createElement('div');
+            controlsContainer.classList.add('ccl-controls-container');
+
+            return controlsContainer;
         };
     }
 
