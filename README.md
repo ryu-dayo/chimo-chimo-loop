@@ -1,6 +1,6 @@
 # chimo-chimo-loop
 
-A lightweight userscript that adds a small control bar with Picture-in-Picture (PiP) and Loop toggles to HTML5 videos.
+A lightweight userscript that adds a small control bar with Picture-in-Picture (PiP), Loop, and Speed to HTML5 videos.
 
 > Primarily tested on **Safari for macOS**.
 > Also compatible with Chromium browsers (e.g. Edge), though functionality and visual performance may vary.
