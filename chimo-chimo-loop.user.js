@@ -343,7 +343,6 @@
             this.statsCotrol = new StatsControl(() => this.updateStats());
             this.rateControl = new RateControl();
             this.controls = [this.pipControl, this.loopControl, this.statsCotrol, this.rateControl];
-            this.layoutObserver = null;
             this.init();
         }
 
@@ -455,20 +454,35 @@
         constructor() {
             this.ui = new UIManager();
             this.activeVideo = null;
-            this.hideTimeout = null;
             this.videoRect = null;
+
+            this.isPlayEventTriggered = false;
+            this.isPaused = false
+
+            this.hideTimeout = null;
             this.isThrottled = false;
             this.pollingId = null;
+            this.layoutObserver = null;
+
             this.setupEvents();
             this.scan();
         }
 
         setupEvents() {
-            ['play', 'playing'].forEach(evt => {
-                document.addEventListener(evt, (e) => {
-                    if (e.target instanceof HTMLVideoElement) this.activate(e.target);
-                }, true);
-            })
+            const onPlay = (e) => {
+                if (e.target instanceof HTMLVideoElement) this.activate(e.target);
+                this.isPlayEventTriggered = true;
+                this.isPaused = false;
+                this.showAndTimer(0);
+            };
+
+            const onPause = () => {
+                this.isPaused = true;
+                this.showPersistent();
+            };
+
+            document.addEventListener('play', onPlay, true);
+            document.addEventListener('pause', onPause, true);
 
             document.addEventListener('scroll', () => this.updateRectAndPosition(), { passive: true });
             window.addEventListener('resize', () => this.updateRectAndPosition(), { passive: true });
@@ -478,6 +492,11 @@
             document.addEventListener('webkitpresentationmodechanged', () => this.ui.pipControl.update(), true);
 
             window.addEventListener('pointermove', (e) => this.handleGlobalPointer(e), { passive: true });
+        }
+
+        showPersistent() {
+            this.clearHideTimer();
+            this.ui.show();
         }
 
         updateRectAndPosition() {
@@ -497,7 +516,6 @@
             this.activeVideo = video;
             this.ui.attach(video);
 
-            this.showAndTimer();
             this.startPolling(500);
 
             this.observerCleanup();
@@ -566,7 +584,7 @@
                 this.detach();
                 return;
             }
-            if (!this.activeVideo || !this.videoRect) return;
+            if (!this.activeVideo || !this.videoRect || this.isPaused) return;
 
             const rect = this.videoRect;
             const isOverVideo = (
@@ -577,23 +595,21 @@
             );
             const isOverControls = this.ui.container.contains(e.target);
             if (isOverVideo || isOverControls) {
+                this.isPlayEventTriggered = false;
                 this.showAndTimer();
             } else {
-                this.ui.hide();
+                if (!this.isPlayEventTriggered) this.ui.hide();
             }
         }
 
-        showAndTimer() {
+        showAndTimer(timeout = 3000) {
+            this.clearHideTimer();
             this.ui.show();
-            this.startHideTimer(3000);
+
+            this.hideTimeout = setTimeout(() => { this.ui.hide(); this.isPlayEventTriggered = false; }, timeout);
         }
 
-        startHideTimer(timeout) {
-            this.stopHideTimer();
-            this.hideTimeout = setTimeout(() => this.ui.hide(), timeout);
-        }
-
-        stopHideTimer() {
+        clearHideTimer() {
             if (!this.hideTimeout) return;
             clearTimeout(this.hideTimeout);
             this.hideTimeout = null;
