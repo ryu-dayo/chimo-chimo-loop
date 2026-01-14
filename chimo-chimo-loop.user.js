@@ -89,7 +89,7 @@
             pointer-events: none;
         }
 
-        .ccl-btn-container > button:active picture { transform: scale(0.89); }
+        .ccl-btn-container > button:active:not(:has(.ccl-menu:active)) picture { transform: scale(0.89); }
 
         .ccl-btn-container {
             display: flex;
@@ -118,12 +118,13 @@
             display: none;
             flex-direction: column;
             gap: 2px;
-            padding: 8px;
+            padding: 6px;
             background-color: hsla(0, 0%, 25%, 0.6);
             transition: opacity 0.2s ease;
-            border-radius: 6px;
+            border-radius: 8px;
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
+            cursor: default;
         }
 
         .ccl-menu.visible { display: flex; }
@@ -260,11 +261,13 @@
             super('ccl-icon-rate', () => this.toggleMenu());
             this.menu = this.createMenu();
             this.el.appendChild(this.menu);
+            this._handleDocumentClick = this.handleDocumentClick.bind(this);
         }
 
         createMenu() {
             const menu = document.createElement('div');
             menu.classList.add('ccl-menu');
+
             [0.5, 1, 1.25, 1.5, 2].forEach(r => {
                 const item = document.createElement('div');
                 item.classList.add('ccl-menu-item');
@@ -288,15 +291,16 @@
         openMenu() {
             this.menu.classList.add('visible');
             this.update();
-            document.addEventListener('click', () => this.handleDocumentClick(), true);
+            document.addEventListener('click', this._handleDocumentClick, true);
         }
 
         closeMenu() {
             this.menu.classList.remove('visible');
-            document.removeEventListener('click', () => this.handleDocumentClick(), true);
+            document.removeEventListener('click', this._handleDocumentClick, true);
         }
 
-        handleDocumentClick() {
+        handleDocumentClick(e) {
+            if (this.el.contains(e.target)) return;
             this.closeMenu();
         }
 
