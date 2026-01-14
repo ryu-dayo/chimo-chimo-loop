@@ -243,9 +243,19 @@
     class LoopControl extends BaseControl {
         constructor() {
             super('ccl-icon-loop', () => { this.video.loop = !this.video.loop; this.update(); });
+            this.observer = null;
         }
+
+        setVideo(v) {
+            super.setVideo(v);
+
+            if (this.observer) this.observer.disconnect();
+            this.observer = new MutationObserver(() => this.update());
+            this.observer.observe(v, { attributes: true, attributeFilter: ['loop'] });
+        }
+
         update() {
-            this.el.querySelector('picture').setAttribute('data-active', !!this.video.loop);
+            this.el.querySelector('picture').setAttribute('data-active', this.video.loop);
         }
     }
 
