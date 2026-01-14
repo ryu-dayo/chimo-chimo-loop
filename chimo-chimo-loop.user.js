@@ -223,10 +223,7 @@
     class PipControl extends BaseControl {
         constructor() {
             super('ccl-icon-pip', () => {
-                const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
-                const supportsSafariPip = typeof this.video.webkitSetPresentationMode === 'function';
-
-                if (isSafari && supportsSafariPip) {
+                if (typeof this.video.webkitSetPresentationMode === 'function') {
                     const mode = this.video.webkitPresentationMode;
                     this.video.webkitSetPresentationMode(mode === 'picture-in-picture' ? 'inline' : 'picture-in-picture');
                 } else {
@@ -235,6 +232,20 @@
                 }
             });
         }
+
+        setVideo(v) {
+            this.video = v;
+
+            if (!this.isPipSupport(v)) this.el.style.display = 'none';
+            else { this.el.style.display = 'flex'; this.update(); }
+        }
+
+        isPipSupport(video) {
+            const isStandard = document.pictureInPictureEnabled && !video.disablePictureInPicture;
+            const isSafari = typeof video.webkitSetPresentationMode === 'function';
+            return isStandard || isSafari;
+        }
+
         update() {
             this.el.querySelector('picture').setAttribute('data-active', document.pictureInPictureElement === this.video);
         }
