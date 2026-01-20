@@ -28,6 +28,48 @@
         playbackRate: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 79 79"><path d="M39.4 78.8a39.4 39.4 0 1 0 0-78.8 39.4 39.4 0 0 0 0 78.8m0-7.4a32 32 0 1 1 0-63.9 32 32 0 0 1 0 63.9"/><path d="M24.4 57.8c2 0 3.5-1.6 3.5-3.6s-1.6-3.5-3.5-3.5c-2 0-3.6 1.6-3.6 3.5 0 2 1.6 3.6 3.6 3.6M18.2 43c2 0 3.5-1.6 3.5-3.6a3.6 3.6 0 0 0-7.1 0c0 2 1.6 3.6 3.6 3.6m6.2-15c2 0 3.5-1.6 3.5-3.5 0-2-1.6-3.6-3.5-3.6a3.6 3.6 0 0 0 0 7.1m15-6.3c2 0 3.6-1.6 3.6-3.6s-1.7-3.6-3.6-3.6-3.6 1.7-3.6 3.6 1.6 3.6 3.6 3.6M60.5 43c2 0 3.6-1.6 3.6-3.6s-1.6-3.6-3.6-3.6-3.6 1.7-3.6 3.6 1.6 3.6 3.6 3.6m-6.2 14.8a3.6 3.6 0 0 0 0-7.1c-2 0-3.6 1.6-3.6 3.5 0 2 1.6 3.6 3.6 3.6m-21.4-12a6 6 0 0 0 9 0c.6-.5 1.4-1.7 1.9-2.3L56.3 25c.8-1 .5-2 0-2.6q-1-1-2.7-.1L35.2 34.8c-.7.5-1.9 1.3-2.3 1.8a6.2 6.2 0 0 0 0 9.2"/></svg>`,
     };
 
+    const LOCALE = {
+        'en': {
+            playbackSpeed: 'Playback Speed',
+            speedUnit: '×',
+            statsLabel: 'Show Media Statistics',
+            sourceType: 'Source',
+            viewport: 'Viewport',
+            frameInfo: 'Frames',
+            resolution: 'Resolution',
+            codecInfo: 'Codecs',
+            colorProfile: 'Color'
+        },
+        'zh-CN': {
+            playbackSpeed: '播放速度',
+            speedUnit: '倍',
+            statsLabel: '显示媒体统计数据',
+            sourceType: '来源',
+            viewport: '视口',
+            frameInfo: '帧',
+            resolution: '分辨率',
+            codecInfo: '编解码器',
+            colorProfile: '色彩'
+        },
+    };
+
+    const getLang = () => {
+        const lang = navigator.language;
+        if (LOCALE[lang]) return lang;
+
+        const prefix = lang.split('-')[0];
+        if (LOCALE[prefix]) return prefix;
+
+        return 'en';
+    };
+
+    const CURRENT_LANG = getLang();
+
+    const t = (key) => {
+        const dict = LOCALE[CURRENT_LANG] || LOCALE['en'];
+        return dict[key] 
+    };
+
     const STYLE = `
         .ccl-controls-container {
             position: fixed;
@@ -129,6 +171,15 @@
 
         .ccl-menu.visible { display: flex; }
 
+        .ccl-menu-head {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 12px;
+            font-family: sans-serif;
+            padding: 4px 12px;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
         .ccl-menu-item {
             display: flex;
             align-items: center;
@@ -141,6 +192,7 @@
             cursor: pointer;
             transition: background 0.2s;
             pointer-events: auto;
+            white-space: nowrap;
         }
 
         .ccl-menu-item:hover {
@@ -289,10 +341,15 @@
             const menu = document.createElement('div');
             menu.classList.add('ccl-menu');
 
+            const head = document.createElement('div');
+            head.classList.add('ccl-menu-head');
+            head.textContent = t('playbackSpeed');
+            menu.appendChild(head);
+
             [0.5, 1, 1.25, 1.5, 2].forEach(r => {
                 const item = document.createElement('div');
                 item.classList.add('ccl-menu-item');
-                item.textContent = r + '×';
+                item.textContent = r + t('speedUnit');
                 item.dataset.rate = r;
                 item.onclick = (e) => {
                     e.stopPropagation();
@@ -403,9 +460,9 @@
                 };
 
                 const data = {
-                    'Source': getSourceType(),
-                    'Viewport': `${this.target.clientWidth}×${this.target.clientHeight} (${window.devicePixelRatio}x)`,
-                    'Resolution': `${this.target.videoWidth}×${this.target.videoHeight}`
+                    [t('sourceType')]: getSourceType(),
+                    [t('viewport')]: `${this.target.clientWidth}×${this.target.clientHeight} (${window.devicePixelRatio}x)`,
+                    [t('resolution')]: `${this.target.videoWidth}×${this.target.videoHeight}`
                 };
 
                 const table = this.container.querySelector('table');
