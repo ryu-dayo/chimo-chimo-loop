@@ -67,7 +67,7 @@
 
     const t = (key) => {
         const dict = LOCALE[CURRENT_LANG] || LOCALE['en'];
-        return dict[key] 
+        return dict[key]
     };
 
     const STYLE = `
@@ -473,6 +473,7 @@
 
             this.controls.forEach(c => c.setVideo(video));
             this.container.querySelector('.ccl-stats-container').classList.remove('visible');
+            this.container.querySelector('.ccl-menu').classList.remove('visible');
         }
 
         detach() {
@@ -501,7 +502,6 @@
             this.activeVideo = null;
             this.videoRect = null;
 
-            this.isPlayEventTriggered = false;
             this.isPaused = false
 
             this.hideTimeout = null;
@@ -516,9 +516,8 @@
         setupEvents() {
             const onPlay = (e) => {
                 if (e.target instanceof HTMLVideoElement) this.activate(e.target);
-                this.isPlayEventTriggered = true;
                 this.isPaused = false;
-                this.showAndTimer(0);
+                this.showAndTimer();
             };
 
             const onPause = () => {
@@ -631,6 +630,9 @@
             }
             if (!this.activeVideo || !this.videoRect || this.isPaused) return;
 
+            const menu = this.ui.container.querySelector('.ccl-menu');
+            if (menu.classList.contains('visible')) return;
+
             const rect = this.videoRect;
             const isOverVideo = (
                 e.clientX >= rect.left &&
@@ -640,10 +642,9 @@
             );
             const isOverControls = this.ui.container.contains(e.target);
             if (isOverVideo || isOverControls) {
-                this.isPlayEventTriggered = false;
                 this.showAndTimer();
             } else {
-                if (!this.isPlayEventTriggered) this.ui.hide();
+                this.ui.hide();
             }
         }
 
@@ -651,7 +652,11 @@
             this.clearHideTimer();
             this.ui.show();
 
-            this.hideTimeout = setTimeout(() => { this.ui.hide(); this.isPlayEventTriggered = false; }, timeout);
+            this.hideTimeout = setTimeout(() => {
+                const menu = this.ui.container.querySelector('.ccl-menu');
+                if (menu.classList.contains('visible')) return;
+                this.ui.hide();
+            }, timeout);
         }
 
         clearHideTimer() {
