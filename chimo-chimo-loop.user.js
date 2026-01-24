@@ -74,31 +74,39 @@
         .ccl-controls-container {
             position: fixed;
             z-index: 999;
-            display: block;
             pointer-events: none;
             will-change: top, left, width, height;
         }
+        
+        .ccl-controls-container > * {
+            top: 0;
+            left: 0;
+            position: absolute;
+        }
+
+        .ccl-controls {
+            position: relative;
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            gap: 6px;
+            padding: 6px;
+            pointer-events: auto;
+            transition: opacity 0.1s linear;
+        }
+
+        .ccl-controls.hidden { opacity: 0; }
 
         .ccl-bar {
-            position: absolute;
-            top: 6px;
-            left: 6px;
+            position: relative;
             display: inline-flex;
             will-change: transform;
             height: 31px;
-        }
-
-        .ccl-bg, .ccl-bg > div {
-            position: absolute;
-            inset: 0;
+            flex-shrink: 0;
             border-radius: 24px;
-            pointer-events: none;
-        }
-
-        .ccl-bg > .blur {
             background-color: rgba(0, 0, 0, 0.55);
-            backdrop-filter: saturate(180%) blur(17.5px);
             -webkit-backdrop-filter: saturate(180%) blur(17.5px);
+            backdrop-filter: saturate(180%) blur(17.5px);
         }
 
         .ccl-btn-container > button {
@@ -141,22 +149,8 @@
             padding: 0 16px;
         }
 
-        .ccl-bar.hidden {
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-
-        .ccl-bar.visible {
-            opacity: 1;
-            pointer-events: auto;
-            transition: opacity 0.3s ease;
-        }
-
         .ccl-menu {
-            position: absolute;
-            top: 50%;
-            left: 80%;
+            position: relative;
             display: none;
             flex-direction: column;
             gap: 2px;
@@ -167,6 +161,8 @@
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
             cursor: default;
+            pointer-events: auto;
+            white-space: nowrap;
         }
 
         .ccl-menu.visible { display: flex; }
@@ -219,12 +215,10 @@
         .ccl-stats-container {
             width: 100%;
             height: 100%;
-            position: absolute;
             justify-content: center;
             align-items: center;
             pointer-events: none;
             display: none;
-            z-index: 999;
         }
 
         .ccl-stats-container.visible { display: flex; }
@@ -323,17 +317,15 @@
     }
 
     class StatsControl extends BaseControl {
-        constructor(onTogglePanel) {
-            super('ccl-icon-stats', () => onTogglePanel());
+        constructor(onToggle) {
+            super('ccl-icon-stats', () => onToggle());
         }
-        update() { }
     }
 
     class RateControl extends BaseControl {
         constructor() {
             super('ccl-icon-rate', () => this.toggleMenu());
             this.menu = this.createMenu();
-            this.el.appendChild(this.menu);
             this._handleDocumentClick = this.handleDocumentClick.bind(this);
         }
 
@@ -410,8 +402,12 @@
 
             const bar = this.createControlsBar();
             const stats = this.createStatsContainer();
-            this.container.append(bar, stats);
 
+            const mediaControls = document.createElement('div');
+            mediaControls.classList.add('ccl-controls');
+            mediaControls.append(bar, this.rateControl.menu);
+
+            this.container.append(mediaControls, stats);
             document.body.appendChild(this.container);
         }
 
@@ -422,21 +418,13 @@
         }
 
         createControlsBar() {
-            const bg = document.createElement('div');
-            bg.classList.add('ccl-bg');
-
-            const blur = document.createElement('div');
-            blur.classList.add('blur');
-
-            bg.appendChild(blur);
-
-            const container = document.createElement('div');
-            container.classList.add('ccl-btn-container');
-            this.controls.forEach(c => container.appendChild(c.el));
+            const btnContainer = document.createElement('div');
+            btnContainer.classList.add('ccl-btn-container');
+            this.controls.forEach(c => btnContainer.appendChild(c.el));
 
             const bar = document.createElement('div');
             bar.classList.add('ccl-bar', 'hidden');
-            bar.append(bg, container);
+            bar.appendChild(btnContainer);
 
             return bar;
         }
@@ -503,8 +491,8 @@
             });
         }
 
-        show() { this.container.querySelector('.ccl-bar').classList.replace('hidden', 'visible'); }
-        hide() { this.container.querySelector('.ccl-bar').classList.replace('visible', 'hidden'); }
+        show() { this.container.querySelector('.ccl-controls').classList.remove('hidden'); }
+        hide() { this.container.querySelector('.ccl-controls').classList.add('hidden'); }
     }
 
     class App {
