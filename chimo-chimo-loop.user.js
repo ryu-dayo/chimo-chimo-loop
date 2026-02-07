@@ -24,8 +24,7 @@
         exitPip: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 101 82"><path d="M12.5 63.3h55.7q12.6 0 12.5-12.3V12.3Q80.7 0 68.2 0H12.5Q0 0 0 12.3V51q0 12.3 12.5 12.3M7 50.6v-38Q7.1 7 12.5 7h55.6q5.4.1 5.5 5.6v38q-.1 5.6-5.5 5.6H12.5q-5.4 0-5.5-5.6"/><path d="M15.1 29.9c.2 1.2 1.8 2.6 3.4 1l4.2-4.1 5.9 5.8c1 1 2.7 1 3.7 0s1-2.7 0-3.7l-5.8-6 4-4.1c1.7-1.6.3-3.2-1-3.4l-14-2q-1.2-.3-1.9.5t-.6 1.9zm35.4 51.7h37.2q12.4 0 12.4-12.2V44.8q0-12.3-12.4-12.3H50.5Q38 32.5 38 44.8v24.6q0 12.3 12.5 12.2"/></svg>`,
         enableLoop: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 99 66"><path d="M28.2 65.9h42.5c17 0 28.1-11 28.1-28.2 0-17-11.1-28.2-28.1-28.2h-8.4a3.5 3.5 0 0 0 0 7h8.4c12.6 0 21.1 8.6 21.1 21.2s-8.5 21.1-21.1 21.1H28.2C15.5 58.8 7 50.3 7 37.8 7 25 15.5 16.5 28.2 16.5h5.1a19 19 0 0 1 0-7l-5.1-.1C11 9.3 0 20.7 0 37.7 0 54.8 11 66 28.2 66"/><path d="M51.4 25.4a12.7 12.7 0 1 0 0-25.4 12.7 12.7 0 0 0 0 25.4m0-6.8a6 6 0 0 1-5.9-5.9c0-3.3 2.6-5.9 5.9-5.9s5.9 2.6 5.9 5.9-2.6 5.9-6 5.9"/></svg>`,
         disableLoop: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 99 66"><path d="M28.2 65.9h42.5c17 0 28.1-11 28.1-28.2 0-17-11.1-28.2-28.1-28.2h-8.4a3.5 3.5 0 0 0 0 7h8.4c12.6 0 21.1 8.6 21.1 21.2s-8.5 21.1-21.1 21.1H28.2C15.5 58.8 7 50.3 7 37.8 7 25 15.5 16.5 28.2 16.5h5.1a19 19 0 0 1 0-7l-5.1-.1C11 9.3 0 20.7 0 37.7 0 54.8 11 66 28.2 66"/><path d="M51.4 25.4a12.7 12.7 0 1 0 0-25.4 12.7 12.7 0 0 0 0 25.4"/></svg>`,
-        stats: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 79 79"><path d="M39.4 78.8a39.4 39.4 0 1 0 0-78.8 39.4 39.4 0 0 0 0 78.8m0-7.4a32 32 0 1 1 0-63.9 32 32 0 0 1 0 63.9"/><path d="M32.8 61h15.5a3 3 0 0 0 3.2-3 3 3 0 0 0-3.2-3H44V36.6q0-3.8-3.3-4h-7.2a3 3 0 1 0 0 6.1h3.6V55h-4.3a3 3 0 0 0-3.2 3 3 3 0 0 0 3.2 3.1M39 26.8c3 0 5.5-2.5 5.5-5.6S42 15.8 39 15.8a5.5 5.5 0 1 0 0 11"/></svg>`,
-        playbackRate: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 79 79"><path d="M39.4 78.8a39.4 39.4 0 1 0 0-78.8 39.4 39.4 0 0 0 0 78.8m0-7.4a32 32 0 1 1 0-63.9 32 32 0 0 1 0 63.9"/><path d="M24.4 57.8c2 0 3.5-1.6 3.5-3.6s-1.6-3.5-3.5-3.5c-2 0-3.6 1.6-3.6 3.5 0 2 1.6 3.6 3.6 3.6M18.2 43c2 0 3.5-1.6 3.5-3.6a3.6 3.6 0 0 0-7.1 0c0 2 1.6 3.6 3.6 3.6m6.2-15c2 0 3.5-1.6 3.5-3.5 0-2-1.6-3.6-3.5-3.6a3.6 3.6 0 0 0 0 7.1m15-6.3c2 0 3.6-1.6 3.6-3.6s-1.7-3.6-3.6-3.6-3.6 1.7-3.6 3.6 1.6 3.6 3.6 3.6M60.5 43c2 0 3.6-1.6 3.6-3.6s-1.6-3.6-3.6-3.6-3.6 1.7-3.6 3.6 1.6 3.6 3.6 3.6m-6.2 14.8a3.6 3.6 0 0 0 0-7.1c-2 0-3.6 1.6-3.6 3.5 0 2 1.6 3.6 3.6 3.6m-21.4-12a6 6 0 0 0 9 0c.6-.5 1.4-1.7 1.9-2.3L56.3 25c.8-1 .5-2 0-2.6q-1-1-2.7-.1L35.2 34.8c-.7.5-1.9 1.3-2.3 1.8a6.2 6.2 0 0 0 0 9.2"/></svg>`,
+        more: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 73 69"><path d="M38.2 68.2q1.8 0 2.9-1.3l30.1-30q1.3-1.2 1.3-2.8a4 4 0 0 0-1.3-2.9l-30.1-30A4 4 0 0 0 38.2 0a4 4 0 0 0-4 4q0 1.7 1.2 3l29.5 29.3v-4.5L35.4 61.2q-1.1 1.2-1.2 3a4 4 0 0 0 4 4"/><path d="M4 68.2q1.8 0 2.9-1.3L37 37q1.1-1.2 1.2-2.8a4 4 0 0 0-1.2-2.9L6.9 1.2A4 4 0 0 0 4 0a4 4 0 0 0-4 4q0 1.7 1.2 3l29.5 29.3v-4.5L1.2 61.2Q0 62.4 0 64.2a4 4 0 0 0 4 4"/></svg>`,
     };
 
     const LOCALE = {
@@ -53,39 +52,25 @@
         },
     };
 
-    const getLang = () => {
-        const lang = navigator.language;
-        if (LOCALE[lang]) return lang;
-
-        const prefix = lang.split('-')[0];
-        if (LOCALE[prefix]) return prefix;
-
-        return 'en';
-    };
-
-    const CURRENT_LANG = getLang();
-
-    const t = (key) => {
-        const dict = LOCALE[CURRENT_LANG] || LOCALE['en'];
-        return dict[key]
-    };
+    const t = (k) => (LOCALE[navigator.language] || LOCALE[navigator.language.split('-')[0]] || LOCALE.en)[k] || k;
 
     const STYLE = `
+        .ccl-controls-container, .ccl-controls-container * {
+            font-size: 12px;
+            line-height: 16px;
+            font-family: sans-serif;
+            font-weight: bold;
+            color: white;
+        }
+            
         .ccl-controls-container {
             position: fixed;
             z-index: 999;
             pointer-events: none;
             will-change: top, left, width, height;
         }
-        
-        .ccl-controls-container > * {
-            top: 0;
-            left: 0;
-            position: absolute;
-        }
 
         .ccl-controls {
-            position: relative;
             display: flex;
             flex-direction: row;
             align-items: flex-start;
@@ -98,9 +83,7 @@
         .ccl-controls.hidden { opacity: 0; }
 
         .ccl-bar {
-            position: relative;
             display: inline-flex;
-            will-change: transform;
             height: 31px;
             flex-shrink: 0;
             border-radius: 24px;
@@ -109,37 +92,34 @@
             backdrop-filter: saturate(180%) blur(17.5px);
         }
 
-        .ccl-btn-container > button {
+        .ccl-control-btn {
             display: flex;
             align-items: center;
             justify-content: center;
-            border-width: 0;
+            border: 0;
             padding: 0;
             cursor: pointer;
-            background-color: transparent !important;
+            background: transparent !important;
             transition: opacity 0.1s linear;
+        }
+        .ccl-control-btn:active { transform: scale(0.89); }
+
+        .ccl-icon {
+            width: 16px;
+            height: 12px;
+            background-color: white;
+            mix-blend-mode: plus-lighter;
+            -webkit-mask: var(--icon) no-repeat center / contain;
+            mask: var(--icon) no-repeat center / contain;
+            transition: transform 150ms;
+            pointer-events: none;
         }
 
         .ccl-icon-pip { --icon: url('${ICONS.enterPip}'); }
         .ccl-icon-pip[data-active="true"] { --icon: url('${ICONS.exitPip}'); }
         .ccl-icon-loop { --icon: url('${ICONS.enableLoop}'); }
         .ccl-icon-loop[data-active="true"] { --icon: url('${ICONS.disableLoop}'); }
-        .ccl-icon-stats { --icon: url('${ICONS.stats}'); }
-        .ccl-icon-rate { --icon: url('${ICONS.playbackRate}'); }
-
-        .ccl-btn-container picture {
-            width: 16px;
-            height: 16px;
-            background-color: white;
-            mix-blend-mode: plus-lighter;
-            mask-image: var(--icon);
-            mask-size: 100% 100%;
-            mask-repeat: no-repeat;
-            transition: transform 150ms;
-            pointer-events: none;
-        }
-
-        .ccl-btn-container > button:active:not(:has(.ccl-menu:active)) picture { transform: scale(0.89); }
+        .ccl-icon-more { --icon: url('${ICONS.more}'); }
 
         .ccl-btn-container {
             display: flex;
@@ -150,71 +130,89 @@
         }
 
         .ccl-menu {
-            position: relative;
+            top: 6px; left: 160px;
+            position: absolute;
             display: none;
-            flex-direction: column;
-            gap: 2px;
-            padding: 6px;
-            background-color: hsla(0, 0%, 25%, 0.6);
             transition: opacity 0.2s ease;
             border-radius: 8px;
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
             cursor: default;
             pointer-events: auto;
             white-space: nowrap;
         }
 
         .ccl-menu.visible { display: flex; }
+        .ccl-menu.visible::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: transparent;
+            pointer-events: auto;
+        }
+
+        .ccl-menu-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            -webkit-backdrop-filter:saturate(180%) blur(17.5px);
+            backdrop-filter: saturate(180%) blur(17.5px);
+            border-radius: 8px;
+        }
+
+        .ccl-menu-container {
+            position: relative;
+            padding: 4px 8px;
+        }
 
         .ccl-menu-head {
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 12px;
-            font-family: sans-serif;
-            padding: 4px 12px;
+            color: rgba(255, 255, 255, 0.2);
+            padding: 4px 8px;
             pointer-events: none;
             white-space: nowrap;
+        }
+
+        .ccl-menu-hr {
+            border: 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.2); 
+            margin: 4px 8px;
+            background: transparent;
         }
 
         .ccl-menu-item {
             display: flex;
             align-items: center;
             gap: 8px;
-            color: white;
-            font-size: 12px;
-            font-family: sans-serif;
-            padding: 4px 12px;
+            padding: 4px 8px;
             border-radius: 6px;
             cursor: pointer;
             transition: background 0.2s;
             pointer-events: auto;
             white-space: nowrap;
         }
-
-        .ccl-menu-item:hover {
-            background: rgba(255, 255, 255, 0.2) !important;
-        }
-
-        .ccl-menu-item:active {
-            color: rgba(255, 255, 255, 0.5);
-            font-weight: bold;
-        }
+        .ccl-menu-item:hover { background: rgba(255, 255, 255, 0.2) !important; }
 
         .ccl-menu-item::before {
-            content: '✓';
+            content: '✔';
             visibility: hidden;
             color: white;
             font-weight: bold;
-            width: 12px;
         }
+        .ccl-menu-item.active::before { visibility: visible; }
 
-        .ccl-menu-item.active::before {
+        .ccl-menu-item-stats { justify-content: center; }
+        .ccl-menu-item-stats::before { display: none; }
+        .ccl-menu-item-stats.active { justify-content: flex-start; }
+
+        .ccl-menu-item-stats.active::before {
+            display: block;
             visibility: visible;
         }
 
         .ccl-stats-container {
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
+            top: 0;
             justify-content: center;
             align-items: center;
             pointer-events: none;
@@ -225,41 +223,35 @@
 
         .ccl-stats-container > table {
             padding: 4px;
-            background-color: hsla(0, 0%, 25%, 0.6);
+            background-color: rgba(64, 64, 64, 0.6);
             border-radius: 6px;
-            backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
         }
 
         .ccl-stats-container th {
             padding-inline-end: 6px;
             text-align: end;
         }
-
-        .ccl-stats-container th, .ccl-stats-container td {
-            font-size: 12px;
-            font-family: sans-serif;
-            color: hsl(0, 0%, 95%);
-        }
     `;
 
-    class BaseControl {
-        constructor(cls, onClick) {
-            this.video = null;
-            this.el = this.createButton(cls, onClick);
-        }
+    const el = (tag, className, text = '', click = null) => {
+        const e = document.createElement(tag);
+        if (className) e.className = className;
+        if (text) e.textContent = text;
+        if (click) e.addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            click(ev);
+        });
+        return e;
+    }
 
-        createButton(cls, onClick) {
-            const btn = document.createElement('button');
-            const picture = document.createElement('picture');
-            picture.classList.add(cls);
-            btn.appendChild(picture);
-            btn.onclick = (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onClick();
-            };
-            return btn;
+    class BaseControl {
+        constructor(iconClass, onClick) {
+            this.video = null;
+            this.el = el('button', 'ccl-control-btn', '', (e) => onClick(e));
+            this.icon = el('picture', `ccl-icon ${iconClass}`);
+            this.el.appendChild(this.icon);
         }
 
         setVideo(v) { this.video = v; this.update(); }
@@ -293,7 +285,8 @@
         }
 
         update() {
-            this.el.querySelector('picture').setAttribute('data-active', document.pictureInPictureElement === this.video);
+            const active = document.pictureInPictureElement === this.video || this.video.webkitPresentationMode === 'picture-in-picture';
+            this.icon.dataset.active = active;
         }
     }
 
@@ -311,185 +304,177 @@
             this.observer.observe(v, { attributes: true, attributeFilter: ['loop'] });
         }
 
-        update() {
-            this.el.querySelector('picture').setAttribute('data-active', this.video.loop);
-        }
+        update() { this.icon.dataset.active = this.video.loop; }
     }
 
-    class StatsControl extends BaseControl {
+    class MoreControl extends BaseControl {
         constructor(onToggle) {
-            super('ccl-icon-stats', () => onToggle());
+            super('ccl-icon-more', () => onToggle());
         }
     }
 
-    class RateControl extends BaseControl {
-        constructor() {
-            super('ccl-icon-rate', () => this.toggleMenu());
-            this.menu = this.createMenu();
-            this._handleDocumentClick = this.handleDocumentClick.bind(this);
+    class ControlsBar {
+        constructor(onMenuToggle) {
+            this.pipControl = new PipControl();
+            this.loopControl = new LoopControl();
+            this.moreControl = new MoreControl(() => onMenuToggle());
+
+            this.controls = [this.pipControl, this.loopControl, this.moreControl];
+            
+            const container = el('div', 'ccl-btn-container')
+            this.controls.forEach(c => container.appendChild(c.el));
+
+            this.el = el('div', 'ccl-bar hidden');
+            this.el.appendChild(container);
         }
 
-        createMenu() {
-            const menu = document.createElement('div');
-            menu.classList.add('ccl-menu');
+        setVideo(video) { this.controls.forEach(c => c.setVideo(video)); }
+    }
 
-            const head = document.createElement('div');
-            head.classList.add('ccl-menu-head');
-            head.textContent = t('playbackSpeed');
-            menu.appendChild(head);
+    class Menu {
+        constructor(onToggleStats, checkStatsState) {
+            this.video = null;
+            this.checkStatsState = checkStatsState;
+
+            this.el = el('div', 'ccl-menu');
+            this.container = el('div', 'ccl-menu-container');
+            this.el.append(el('div', 'ccl-menu-bg'), this.container);
+
+            this.container.appendChild(el('div', 'ccl-menu-head', t('playbackSpeed')));
 
             [0.5, 1, 1.25, 1.5, 2].forEach(r => {
-                const item = document.createElement('div');
-                item.classList.add('ccl-menu-item');
-                item.textContent = r + t('speedUnit');
-                item.dataset.rate = r;
-                item.onclick = (e) => {
-                    e.stopPropagation();
+                const item = el('div', 'ccl-menu-item', `${r} ${t('speedUnit')}`, () => {
                     if (this.video) this.video.playbackRate = r;
-                    this.closeMenu();
-                };
-                menu.appendChild(item);
+                    this.hide();
+                });
+                item.dataset.rate = r;
+                this.container.appendChild(item);
             })
-            return menu;
-        }
 
-        toggleMenu() {
-            const isVisible = this.menu.classList.contains('visible');
-            isVisible ? this.closeMenu() : this.openMenu();
-        }
+            this.container.appendChild(el('hr', 'ccl-menu-hr'));
 
-        openMenu() {
-            this.menu.classList.add('visible');
-            this.update();
-            document.addEventListener('click', this._handleDocumentClick, true);
-        }
+            this.statsItem = el('div', 'ccl-menu-item ccl-menu-item-stats', t('statsLabel'), () => {
+                onToggleStats();
+                this.hide();
+            })
+            this.container.appendChild(this.statsItem);
 
-        closeMenu() {
-            this.menu.classList.remove('visible');
-            document.removeEventListener('click', this._handleDocumentClick, true);
-        }
-
-        handleDocumentClick(e) {
-            if (this.el.contains(e.target)) return;
-            this.closeMenu();
+            this.el.addEventListener('click', () => { if (this.visible) this.hide(); });
         }
 
         update() {
             if (!this.video) return;
-            Array.from(this.menu.children).forEach(item => {
-                const rate = parseFloat(item.textContent);
-                item.classList.toggle('active', Math.abs(this.video.playbackRate - rate) < 0.01);
+            Array.from(this.container.children).forEach(item => {
+                if (item.dataset.rate) {
+                    const rate = parseFloat(item.dataset.rate);
+                    item.classList.toggle('active', Math.abs(this.video.playbackRate - rate) < 0.01);
+                }
             });
+
+            if (this.checkStatsState) this.statsItem.classList.toggle('active', this.checkStatsState());
         }
+
+        get visible() { return this.el.classList.contains('visible'); }
+        show() { this.el.classList.add('visible'); this.update(); }
+        hide() { this.el.classList.remove('visible'); }
+        toggle() { this.visible ? this.hide() : this.show(); }
+        setVideo(v) { this.video = v; }
+    }
+
+    class StatsContainer {
+        constructor() {
+            this.video = null;
+            this.el = el('div', 'ccl-stats-container');
+            this.table = el('table');
+            this.el.appendChild(this.table);
+        }
+
+        update() {
+            const getSourceType = () => {
+                const src = this.video.src;
+                if (src.startsWith('blob:')) return 'Media Source';
+                if (src.includes('m3u8')) return 'HLS';
+                return 'File';
+            };
+
+            const data = {
+                [t('sourceType')]: getSourceType(),
+                [t('viewport')]: `${this.video.clientWidth}×${this.video.clientHeight} (${window.devicePixelRatio}x)`,
+                [t('resolution')]: `${this.video.videoWidth}×${this.video.videoHeight}`
+            };
+
+            this.table.textContent = '';
+            const addRow = (k, v) => {
+                const r = el('tr');
+                r.appendChild(el('th', '', k));
+                r.appendChild(el('td', '', v));
+                this.table.appendChild(r);
+            };
+
+            for (const [key, val] of Object.entries(data)) { addRow(key, val); }
+        }
+
+        show() { this.el.classList.add('visible'); this.update(); }
+        hide() { this.el.classList.remove('visible'); }
+        toggle() { this.el.classList.contains('visible') ? this.hide() : this.show(); }
+        get visible() { return this.el.classList.contains('visible'); }
+
+        setVideo(v) { this.video = v; }
     }
 
     class UIManager {
         constructor() {
-            this.target = null;
-            this.container = this.createContainer();
-            this.pipControl = new PipControl();
-            this.loopControl = new LoopControl();
-            this.statsCotrol = new StatsControl(() => this.updateStats());
-            this.rateControl = new RateControl();
-            this.controls = [this.pipControl, this.loopControl, this.statsCotrol, this.rateControl];
-            this.init();
-        }
-
-        init() {
             const style = document.createElement('style');
             style.textContent = STYLE;
             document.head.appendChild(style);
 
-            const bar = this.createControlsBar();
-            const stats = this.createStatsContainer();
+            this.controlsBar = new ControlsBar(() => {
+                this.updateMenuPosition();
+                this.menu.toggle();
+            });
+            this.menu = new Menu(() => this.stats.toggle(), () => this.stats.visible);
+            this.stats = new StatsContainer();
 
-            const mediaControls = document.createElement('div');
-            mediaControls.classList.add('ccl-controls');
-            mediaControls.append(bar, this.rateControl.menu);
+            this.video = null;
+            this.components = [this.controlsBar, this.menu, this.stats];
 
-            this.container.append(mediaControls, stats);
+            const mediaControls = el('div', 'ccl-controls');
+            mediaControls.append(this.controlsBar.el);
+
+            this.container = el('div', 'ccl-controls-container');
+            this.container.append(mediaControls, this.menu.el, this.stats.el);
             document.body.appendChild(this.container);
         }
 
-        createContainer() {
-            const container = document.createElement('div');
-            container.classList.add('ccl-controls-container');
-            return container;
-        }
-
-        createControlsBar() {
-            const btnContainer = document.createElement('div');
-            btnContainer.classList.add('ccl-btn-container');
-            this.controls.forEach(c => btnContainer.appendChild(c.el));
-
-            const bar = document.createElement('div');
-            bar.classList.add('ccl-bar', 'hidden');
-            bar.appendChild(btnContainer);
-
-            return bar;
-        }
-
-        createStatsContainer() {
-            const container = document.createElement('div');
-            container.classList.add('ccl-stats-container');
-            const table = document.createElement('table');
-            container.append(table);
-            return container;
-        }
-
-        updateStats() {
-            const isVisible = this.container.querySelector('.ccl-stats-container').classList.toggle('visible');
-            if (isVisible && this.target) {
-                const getSourceType = () => {
-                    const src = this.target.currentSrc;
-                    if (src.startsWith('blob:')) return 'Media Source';
-                    if (src.includes('m3u8')) return 'HLS';
-                    return 'File';
-                };
-
-                const data = {
-                    [t('sourceType')]: getSourceType(),
-                    [t('viewport')]: `${this.target.clientWidth}×${this.target.clientHeight} (${window.devicePixelRatio}x)`,
-                    [t('resolution')]: `${this.target.videoWidth}×${this.target.videoHeight}`
-                };
-
-                const table = this.container.querySelector('table');
-                table.textContent = '';
-                for (const [key, val] of Object.entries(data)) {
-                    const row = document.createElement('tr');
-                    const th = document.createElement('th');
-                    th.textContent = key;
-                    const td = document.createElement('td');
-                    td.textContent = val;
-
-                    row.append(th, td);
-                    table.appendChild(row);
-                }
-            }
+        updateMenuPosition() {
+            const barWidth = this.controlsBar.el.offsetWidth;
+            const leftPos = 6 + barWidth + 16;
+            this.menu.el.style.left = `${leftPos}px`;
         }
 
         attach(video) {
-            this.target = video;
+            this.video = video;
+            this.components.forEach(c => c.setVideo(video));
 
-            this.controls.forEach(c => c.setVideo(video));
-            this.container.querySelector('.ccl-stats-container').classList.remove('visible');
-            this.container.querySelector('.ccl-menu').classList.remove('visible');
+            this.stats.hide();
+            this.menu.hide();
+
         }
 
         detach() {
-            this.target = null;
+            this.video = null;
             this.hide();
-            this.container.querySelector('.ccl-stats-container').classList.remove('visible');
+            
+            this.stats.hide();
+            this.menu.hide();
         }
 
         reposition(rect) {
             if (!rect) return;
-            Object.assign(this.container.style, {
-                top: `${rect.top}px`,
-                left: `${rect.left}px`,
-                width: `${rect.width}px`,
-                height: `${rect.height}px`
-            });
+            this.container.style.top = rect.top + 'px';
+            this.container.style.left = rect.left + 'px';
+            this.container.style.width = rect.width + 'px';
+            this.container.style.height = rect.height + 'px';
         }
 
         show() { this.container.querySelector('.ccl-controls').classList.remove('hidden'); }
@@ -531,9 +516,9 @@
             document.addEventListener('scroll', () => this.updateRectAndPosition(), { passive: true });
             window.addEventListener('resize', () => this.updateRectAndPosition(), { passive: true });
 
-            document.addEventListener('enterpictureinpicture', () => this.ui.pipControl.update(), true);
-            document.addEventListener('leavepictureinpicture', () => this.ui.pipControl.update(), true);
-            document.addEventListener('webkitpresentationmodechanged', () => this.ui.pipControl.update(), true);
+            document.addEventListener('enterpictureinpicture', () => this.ui.controlsBar.pipControl.update(), true);
+            document.addEventListener('leavepictureinpicture', () => this.ui.controlsBar.pipControl.update(), true);
+            document.addEventListener('webkitpresentationmodechanged', () => this.ui.controlsBar.pipControl.update(), true);
 
             window.addEventListener('pointermove', (e) => this.handleGlobalPointer(e), { passive: true });
         }
