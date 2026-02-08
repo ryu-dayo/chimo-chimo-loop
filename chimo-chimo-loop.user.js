@@ -2,7 +2,7 @@
 // @name         chimo-chimo-loop
 // @name:zh-CN   chimo-chimo-loop
 // @namespace    https://github.com/ryu-dayo/chimo-chimo-loop
-// @version      1.1.0
+// @version      1.2.0
 // @description  Adds PiP, loop, and speed controls to HTML5 videos.
 // @description:zh-CN  为 HTML5 视频播放器添加画中画（PiP）、循环播放和倍速控制按钮。
 // @author       ryu-dayo
@@ -22,9 +22,10 @@
     const ICONS = {
         enterPip: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 101 82"><path d="M12.5 63.3h55.7q12.6 0 12.5-12.3V12.3Q80.7 0 68.2 0H12.5Q0 0 0 12.3V51q0 12.3 12.5 12.3M7 50.6v-38Q7.1 7 12.5 7h55.6q5.4.1 5.5 5.6v38q-.1 5.6-5.5 5.6H12.5q-5.4 0-5.5-5.6"/><path d="M31 16.8c-.2-1.2-1.8-2.6-3.4-1L23.4 20l-5.8-6c-1-1-2.8-1-3.8 0s-1 2.7 0 3.8l5.9 5.8-4.1 4.2c-1.7 1.6-.3 3.2 1 3.4l14 2.1q1 .1 2-.6.6-.8.5-1.8zm19.5 64.8h37.2q12.4 0 12.4-12.2V44.8q0-12.3-12.4-12.3H50.5Q38 32.5 38 44.8v24.6q0 12.3 12.5 12.2"/></svg>`,
         exitPip: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 101 82"><path d="M12.5 63.3h55.7q12.6 0 12.5-12.3V12.3Q80.7 0 68.2 0H12.5Q0 0 0 12.3V51q0 12.3 12.5 12.3M7 50.6v-38Q7.1 7 12.5 7h55.6q5.4.1 5.5 5.6v38q-.1 5.6-5.5 5.6H12.5q-5.4 0-5.5-5.6"/><path d="M15.1 29.9c.2 1.2 1.8 2.6 3.4 1l4.2-4.1 5.9 5.8c1 1 2.7 1 3.7 0s1-2.7 0-3.7l-5.8-6 4-4.1c1.7-1.6.3-3.2-1-3.4l-14-2q-1.2-.3-1.9.5t-.6 1.9zm35.4 51.7h37.2q12.4 0 12.4-12.2V44.8q0-12.3-12.4-12.3H50.5Q38 32.5 38 44.8v24.6q0 12.3 12.5 12.2"/></svg>`,
-        enableLoop: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 99 66"><path d="M28.2 65.9h42.5c17 0 28.1-11 28.1-28.2 0-17-11.1-28.2-28.1-28.2h-8.4a3.5 3.5 0 0 0 0 7h8.4c12.6 0 21.1 8.6 21.1 21.2s-8.5 21.1-21.1 21.1H28.2C15.5 58.8 7 50.3 7 37.8 7 25 15.5 16.5 28.2 16.5h5.1a19 19 0 0 1 0-7l-5.1-.1C11 9.3 0 20.7 0 37.7 0 54.8 11 66 28.2 66"/><path d="M51.4 25.4a12.7 12.7 0 1 0 0-25.4 12.7 12.7 0 0 0 0 25.4m0-6.8a6 6 0 0 1-5.9-5.9c0-3.3 2.6-5.9 5.9-5.9s5.9 2.6 5.9 5.9-2.6 5.9-6 5.9"/></svg>`,
-        disableLoop: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 99 66"><path d="M28.2 65.9h42.5c17 0 28.1-11 28.1-28.2 0-17-11.1-28.2-28.1-28.2h-8.4a3.5 3.5 0 0 0 0 7h8.4c12.6 0 21.1 8.6 21.1 21.2s-8.5 21.1-21.1 21.1H28.2C15.5 58.8 7 50.3 7 37.8 7 25 15.5 16.5 28.2 16.5h5.1a19 19 0 0 1 0-7l-5.1-.1C11 9.3 0 20.7 0 37.7 0 54.8 11 66 28.2 66"/><path d="M51.4 25.4a12.7 12.7 0 1 0 0-25.4 12.7 12.7 0 0 0 0 25.4"/></svg>`,
+        enableLoop: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 84 70"><path  d="M34.9 66.6V41.9q0-2.6-2.8-2.6-1.1 0-2.1.8L15.4 52.4c-1.2 1-1.3 2.6 0 3.8L30 68.5q1 .7 2.1.7 2.7 0 2.8-2.6m45.3-33.5c-2 0-3.5 1.5-3.5 3.6v3.7c0 6.2-4.6 10.5-11.2 10.5H29.2c-2 0-3.6 1.6-3.6 3.5 0 2 1.6 3.6 3.6 3.6h35.6c11.6 0 19-6.7 19-17v-4.3c0-2-1.5-3.6-3.6-3.6M49 2.6v24.7q0 2.6 2.7 2.6 1.1 0 2.1-.7l14.6-12.3c1.3-1 1.4-2.7 0-3.8L53.8.8q-1-.8-2.1-.8Q49 .1 49 2.6M3.6 36.2c2 0 3.6-1.6 3.6-3.6v-3.7c0-6.3 4.5-10.5 11-10.5h36.4a3.5 3.5 0 0 0 0-7.1H19c-11.6 0-19 6.6-19 17v4.3c0 2 1.6 3.6 3.6 3.6"/></svg>`,
+        disableLoop: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 91 70"><path d="M3.6 36.2c2 0 3.6-1.6 3.6-3.6v-3.7c0-6.3 4.5-10.5 11-10.5h21c2 0 3.6-1.7 3.6-3.6s-1.6-3.5-3.6-3.5H19c-11.6 0-19 6.6-19 17v4.3c0 2 1.6 3.6 3.6 3.6m30-33.6v24.7q0 2.6 2.7 2.6 1.1 0 2-.7L53 16.9c1.2-1 1.3-2.7 0-3.8L38.4.8q-1-.8-2.1-.8-2.7.1-2.8 2.6m46.6 30.5c-2 0-3.5 1.5-3.5 3.6v3.7c0 6.2-4.6 10.5-11.2 10.5H29.2c-2 0-3.6 1.6-3.6 3.5 0 2 1.6 3.6 3.6 3.6h35.6c11.6 0 19-6.7 19-17v-4.3c0-2-1.5-3.6-3.6-3.6M35 66.6V41.9q0-2.6-2.8-2.6-1.1 0-2.1.8L15.4 52.4c-1.2 1-1.3 2.6 0 3.8L30 68.5q1 .7 2.1.7 2.7 0 2.8-2.6m40.6-45c-1 1.1-2.7.9-3.7-.2-1-1-1.2-2.6-.2-3.7l5.4-5.3-4.9-5c-1-1-1-2.6 0-3.5 1-1 2.6-1 3.5 0l5 4.9L86 3.4c1.1-1.1 2.7-1 3.7.1 1 1 1.3 2.7.1 3.7l-5.3 5.4 4.9 5c1 1 1 2.6 0 3.5-1 1-2.6 1-3.6 0l-5-4.9z"/></svg>`,
         more: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 73 69"><path d="M38.2 68.2q1.8 0 2.9-1.3l30.1-30q1.3-1.2 1.3-2.8a4 4 0 0 0-1.3-2.9l-30.1-30A4 4 0 0 0 38.2 0a4 4 0 0 0-4 4q0 1.7 1.2 3l29.5 29.3v-4.5L35.4 61.2q-1.1 1.2-1.2 3a4 4 0 0 0 4 4"/><path d="M4 68.2q1.8 0 2.9-1.3L37 37q1.1-1.2 1.2-2.8a4 4 0 0 0-1.2-2.9L6.9 1.2A4 4 0 0 0 4 0a4 4 0 0 0-4 4q0 1.7 1.2 3l29.5 29.3v-4.5L1.2 61.2Q0 62.4 0 64.2a4 4 0 0 0 4 4"/></svg>`,
+        setPointB: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M12.5 71.2h46.2Q71 71.2 71 58.9V12.3Q71.2 0 58.7 0H12.5Q0 0 0 12.3v46.6q0 12.3 12.5 12.3m0-7q-5.4 0-5.5-5.7V12.6q.1-5.5 5.5-5.5h46q5.5 0 5.6 5.5v46Q64 64 58.6 64z"/><path d="M26.7 52.7h11c8.1 0 13.4-4 13.4-10 0-4.6-3.2-7.9-8.4-8.5v-.3c4-1 6.3-3.9 6.3-7.7 0-5.3-4.3-8.7-11-8.7H26.6q-3.9 0-4 4v27.3q.1 3.7 4 3.9m2.8-20.5v-9.6h7c3.6 0 5.9 1.8 5.9 4.7q0 5-7.9 5zm0 15.5V36.9H37q7 .1 7.2 5.5.1 5.4-9 5.3z"/></svg>`,
     };
 
     const LOCALE = {
@@ -79,8 +80,7 @@
             pointer-events: auto;
             transition: opacity 0.1s linear;
         }
-
-        .ccl-controls.hidden { opacity: 0; }
+        .ccl-controls.hidden { display: none; }
 
         .ccl-bar {
             display: inline-flex;
@@ -120,6 +120,7 @@
         .ccl-icon-loop { --icon: url('${ICONS.enableLoop}'); }
         .ccl-icon-loop[data-active="true"] { --icon: url('${ICONS.disableLoop}'); }
         .ccl-icon-more { --icon: url('${ICONS.more}'); }
+        .ccl-icon-ab { --icon: url('${ICONS.setPointB}'); }
 
         .ccl-btn-container {
             display: flex;
@@ -211,6 +212,7 @@
         }
 
         .ccl-stats-container {
+            position: absolute;
             width: 100%; height: 100%;
             top: 0;
             justify-content: center;
@@ -239,10 +241,12 @@
         const e = document.createElement(tag);
         if (className) e.className = className;
         if (text) e.textContent = text;
-        if (click) e.addEventListener('click', (ev) => {
-            ev.stopPropagation();
-            click(ev);
-        });
+        if (click) {
+            e.addEventListener('click', (ev) => {
+                ev.stopPropagation();
+                click(ev);
+            });
+        }
         return e;
     }
 
@@ -291,20 +295,85 @@
     }
 
     class LoopControl extends BaseControl {
-        constructor() {
-            super('ccl-icon-loop', () => { this.video.loop = !this.video.loop; this.update(); });
+        constructor(onLoopToggle) {
+            super('ccl-icon-loop', () => {
+                this.video.loop = !this.video.loop;
+                this.update();
+                this.onLoopToggle(this.video.loop, this.video);
+            });
             this.observer = null;
+            this.onLoopToggle = onLoopToggle;
         }
 
         setVideo(v) {
             super.setVideo(v);
 
             if (this.observer) this.observer.disconnect();
-            this.observer = new MutationObserver(() => this.update());
+            this.observer = new MutationObserver(() => {
+                this.update()
+                this.onLoopToggle(this.video.loop, this.video);
+            });
             this.observer.observe(v, { attributes: true, attributeFilter: ['loop'] });
         }
 
         update() { this.icon.dataset.active = this.video.loop; }
+    }
+
+    class ABControl extends BaseControl {
+        constructor() {
+            super('ccl-icon-ab', () => this.handleClick());
+            this.el.style.display = 'none';
+
+            this.startTime = null;
+            this.endTime = null;
+
+            this.loopHandlerBound = this.loopHandler.bind(this);
+        }
+
+        setVideo(v) {
+            this.reset();
+            super.setVideo(v);
+        }
+
+        setDirectA(time) {
+            this.startTime = time;
+            this.show();
+        }
+
+        handleClick() {
+            if (!this.video) return;
+            const now = this.video.currentTime;
+
+            if (this.startTime) {
+                if (now <= this.startTime) {
+                    alert('Please select a future time to start the loop.');
+                    return;
+                }
+
+                this.endTime = now;
+                this.hide();
+
+                this.video.addEventListener('timeupdate', this.loopHandlerBound);
+                this.video.currentTime = this.startTime;
+                this.video.play();
+            }
+        }
+
+        loopHandler() {
+            if (this.endTime && this.video.currentTime >= this.endTime) {
+                this.video.currentTime = this.startTime;
+            }
+        }
+
+        reset() {
+            if (this.video) this.video.removeEventListener('timeupdate', this.loopHandlerBound);
+            this.startTime = null;
+            this.endTime = null;
+            this.hide();
+        }
+
+        show() { this.el.style.display = 'flex'; }
+        hide() { this.el.style.display = 'none'; }
     }
 
     class MoreControl extends BaseControl {
@@ -316,19 +385,36 @@
     class ControlsBar {
         constructor(onMenuToggle) {
             this.pipControl = new PipControl();
-            this.loopControl = new LoopControl();
+            this.loopControl = new LoopControl((isLooping, video) => {
+                if (isLooping && video) this.abControl.setDirectA(video.currentTime);
+                else this.abControl.reset();
+            });
+            this.abControl = new ABControl();
             this.moreControl = new MoreControl(() => onMenuToggle());
 
-            this.controls = [this.pipControl, this.loopControl, this.moreControl];
-            
+            this.controls = [this.pipControl, this.loopControl, this.abControl, this.moreControl];
+
             const container = el('div', 'ccl-btn-container')
             this.controls.forEach(c => container.appendChild(c.el));
 
-            this.el = el('div', 'ccl-bar hidden');
+            this.el = el('div', 'ccl-bar');
             this.el.appendChild(container);
         }
 
         setVideo(video) { this.controls.forEach(c => c.setVideo(video)); }
+    }
+
+    class MediaControls {
+        constructor(onMenuToggle) {
+            this.el = el('div', 'ccl-controls');
+            this.controlsBar = new ControlsBar(() => onMenuToggle());
+            this.components = [this.controlsBar];
+            this.components.forEach(c => this.el.appendChild(c.el));
+        }
+
+        show() { this.el.classList.remove('hidden'); };
+        hide() { this.el.classList.add('hidden'); };
+        setVideo(video) { this.components.forEach(c => c.setVideo(video)); }
     }
 
     class Menu {
@@ -378,7 +464,7 @@
         show() { this.el.classList.add('visible'); this.update(); }
         hide() { this.el.classList.remove('visible'); }
         toggle() { this.visible ? this.hide() : this.show(); }
-        setVideo(v) { this.video = v; }
+        setVideo(v) { this.video = v; this.hide(); }
     }
 
     class StatsContainer {
@@ -419,7 +505,7 @@
         toggle() { this.el.classList.contains('visible') ? this.hide() : this.show(); }
         get visible() { return this.el.classList.contains('visible'); }
 
-        setVideo(v) { this.video = v; }
+        setVideo(v) { this.video = v; this.hide(); }
     }
 
     class UIManager {
@@ -428,26 +514,23 @@
             style.textContent = STYLE;
             document.head.appendChild(style);
 
-            this.controlsBar = new ControlsBar(() => {
-                this.updateMenuPosition();
-                this.menu.toggle();
-            });
             this.menu = new Menu(() => this.stats.toggle(), () => this.stats.visible);
             this.stats = new StatsContainer();
+            this.mediaControls = new MediaControls(() => {
+                this.updateMenuPosition();
+                this.menu.toggle()
+            });
 
             this.video = null;
-            this.components = [this.controlsBar, this.menu, this.stats];
-
-            const mediaControls = el('div', 'ccl-controls');
-            mediaControls.append(this.controlsBar.el);
+            this.components = [this.mediaControls, this.menu, this.stats];
 
             this.container = el('div', 'ccl-controls-container');
-            this.container.append(mediaControls, this.menu.el, this.stats.el);
+            this.components.forEach(c => this.container.appendChild(c.el));
             document.body.appendChild(this.container);
         }
 
         updateMenuPosition() {
-            const barWidth = this.controlsBar.el.offsetWidth;
+            const barWidth = this.mediaControls.controlsBar.el.offsetWidth;
             const leftPos = 6 + barWidth + 16;
             this.menu.el.style.left = `${leftPos}px`;
         }
@@ -455,18 +538,11 @@
         attach(video) {
             this.video = video;
             this.components.forEach(c => c.setVideo(video));
-
-            this.stats.hide();
-            this.menu.hide();
-
         }
 
         detach() {
             this.video = null;
-            this.hide();
-            
-            this.stats.hide();
-            this.menu.hide();
+            this.components.forEach(c => c.hide());
         }
 
         reposition(rect) {
@@ -477,8 +553,8 @@
             this.container.style.height = rect.height + 'px';
         }
 
-        show() { this.container.querySelector('.ccl-controls').classList.remove('hidden'); }
-        hide() { this.container.querySelector('.ccl-controls').classList.add('hidden'); }
+        show() { this.mediaControls.show(); }
+        hide() { this.mediaControls.hide(); }
     }
 
     class App {
