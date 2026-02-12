@@ -2,7 +2,7 @@
 // @name         chimo-chimo-loop
 // @name:zh-CN   chimo-chimo-loop
 // @namespace    https://github.com/ryu-dayo/chimo-chimo-loop
-// @version      1.2.0
+// @version      1.2.1
 // @description  Adds PiP, loop, and speed controls to HTML5 videos.
 // @description:zh-CN  为 HTML5 视频播放器添加画中画（PiP）、循环播放和倍速控制按钮。
 // @author       ryu-dayo
@@ -75,10 +75,9 @@
             display: flex;
             flex-direction: row;
             align-items: flex-start;
-            gap: 6px;
+            gap: 16px;
             padding: 6px;
             pointer-events: auto;
-            transition: opacity 0.1s linear;
         }
         .ccl-controls.hidden { display: none; }
 
@@ -100,7 +99,6 @@
             padding: 0;
             cursor: pointer;
             background: transparent !important;
-            transition: opacity 0.1s linear;
         }
         .ccl-control-btn:active { transform: scale(0.89); }
 
@@ -131,10 +129,8 @@
         }
 
         .ccl-menu {
-            top: 6px; left: 160px;
-            position: absolute;
+            position: relative;
             display: none;
-            transition: opacity 0.2s ease;
             border-radius: 8px;
             cursor: default;
             pointer-events: auto;
@@ -145,9 +141,7 @@
         .ccl-menu.visible::before {
             content: '';
             position: fixed;
-            top: 0; left: 0;
-            width: 100vw;
-            height: 100vh;
+            inset: 0;
             background: transparent;
             pointer-events: auto;
         }
@@ -405,10 +399,12 @@
     }
 
     class MediaControls {
-        constructor(onMenuToggle) {
+        constructor(onStatsToggle, onStatsVisible) {
             this.el = el('div', 'ccl-controls');
-            this.controlsBar = new ControlsBar(() => onMenuToggle());
-            this.components = [this.controlsBar];
+            this.controlsBar = new ControlsBar(() => this.menu.toggle());
+            this.menu = new Menu(onStatsToggle, onStatsVisible);
+            
+            this.components = [this.controlsBar, this.menu];
             this.components.forEach(c => this.el.appendChild(c.el));
         }
 
@@ -514,25 +510,15 @@
             style.textContent = STYLE;
             document.head.appendChild(style);
 
-            this.menu = new Menu(() => this.stats.toggle(), () => this.stats.visible);
             this.stats = new StatsContainer();
-            this.mediaControls = new MediaControls(() => {
-                this.updateMenuPosition();
-                this.menu.toggle()
-            });
+            this.mediaControls = new MediaControls(() => this.stats.toggle(), () => this.stats.visible);
 
             this.video = null;
-            this.components = [this.mediaControls, this.menu, this.stats];
+            this.components = [this.mediaControls, this.stats];
 
             this.container = el('div', 'ccl-controls-container');
             this.components.forEach(c => this.container.appendChild(c.el));
             document.body.appendChild(this.container);
-        }
-
-        updateMenuPosition() {
-            const barWidth = this.mediaControls.controlsBar.el.offsetWidth;
-            const leftPos = 6 + barWidth + 16;
-            this.menu.el.style.left = `${leftPos}px`;
         }
 
         attach(video) {
