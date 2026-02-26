@@ -2,7 +2,7 @@
 // @name         chimo-chimo-loop
 // @name:zh-CN   chimo-chimo-loop
 // @namespace    https://github.com/ryu-dayo/chimo-chimo-loop
-// @version      1.2.1
+// @version      1.2.2
 // @description  Adds PiP, loop, and speed controls to HTML5 videos.
 // @description:zh-CN  为 HTML5 视频播放器添加画中画（PiP）、循环播放和倍速控制按钮。
 // @author       ryu-dayo
@@ -77,7 +77,7 @@
             align-items: flex-start;
             gap: 16px;
             padding: 6px;
-            pointer-events: auto;
+            pointer-events: none;
         }
         .ccl-controls.hidden { display: none; }
 
@@ -89,6 +89,7 @@
             background-color: rgba(0, 0, 0, 0.55);
             -webkit-backdrop-filter: saturate(180%) blur(17.5px);
             backdrop-filter: saturate(180%) blur(17.5px);
+            pointer-events: auto;
         }
 
         .ccl-control-btn {
