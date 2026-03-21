@@ -13,7 +13,7 @@
 // @match        https://www.youtube.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=douyin.com
 // @grant        none
-// @license      MIT
+// @license      GPL-3.0
 // ==/UserScript==
 
 (function () {
