@@ -40,7 +40,10 @@
             resolution: 'Resolution',
             codecInfo: 'Codecs',
             colorProfile: 'Color',
-            screenshotError: 'Screenshot failed due to CORS restrictions.'
+            screenshotError: 'Screenshot failed due to CORS restrictions.',
+            file: 'File',
+            mediaSource: 'Media Source',
+
         },
         'zh-CN': {
             playbackSpeed: '播放速度',
@@ -52,7 +55,9 @@
             resolution: '分辨率',
             codecInfo: '编解码器',
             colorProfile: '色彩',
-            screenshotError: '由于跨域限制 (CORS)，截图失败。'
+            screenshotError: '由于跨域限制 (CORS)，截图失败。',
+            file: '文件',
+            mediaSource: '媒体源',
         },
     };
 
@@ -519,39 +524,140 @@
             this.el = el('div', 'ccl-stats-container');
             this.table = el('table');
             this.el.appendChild(this.table);
+
+            this.isTracking = false;
+            this.updateInterval = null;
+            this.lastTime = 0;
+
+            this.currentFps = '0.0';
+            this.cachedColorSpace = null;
+
+            this.cells = {};
+            this.initTableDOM();
         }
 
-        update() {
-            const getSourceType = () => {
-                const src = this.video.src;
-                if (src.startsWith('blob:')) return 'Media Source';
-                if (src.includes('m3u8')) return 'HLS';
-                return 'File';
-            };
+        getSourceType() {
+            if (!this.video) return 'Unknown';
 
-            const data = {
-                [t('sourceType')]: getSourceType(),
-                [t('viewport')]: `${this.video.clientWidth}×${this.video.clientHeight} (${window.devicePixelRatio}x)`,
-                [t('resolution')]: `${this.video.videoWidth}×${this.video.videoHeight}`
-            };
+            const src = this.video.currentSrc || this.video.src || '';
 
-            this.table.textContent = '';
-            const addRow = (k, v) => {
+            if (src.startsWith('blob:')) return t('mediaSource');
+            if (src.toLowerCase().includes('m3u8')) return 'HLS';
+            if (src.startsWith('http') || src.startsWith('/') || src.startsWith('data:')) return t('file');
+            return 'Unknown';
+        };
+
+        getColorSpace() {
+            if (this.cachedColorSpace) return this.cachedColorSpace;
+
+            try {
+                if (typeof VideoFrame === 'undefined') return 'Unsupported';
+                const frame = new VideoFrame(this.video);
+                const cs = frame.colorSpace;
+                frame.close();
+
+                if (cs) {
+                    const primaries = cs.primaries || 'unknown';
+                    const transfer = cs.transfer || 'unknown';
+                    const matrix = cs.matrix || 'unknown';
+                    this.cachedColorSpace = `${primaries} / ${transfer} / ${matrix}`;
+                    return this.cachedColorSpace;
+                }
+            } catch (e) {
+                return 'Unsupported';
+            }
+            return 'Unknown';
+        }
+
+        initTableDOM() {
+            const addRow = (key, label) => {
                 const r = el('tr');
-                r.appendChild(el('th', '', k));
-                r.appendChild(el('td', '', v));
+                r.appendChild(el('th', '', label));
+                const td = el('td', '', '');
+                r.appendChild(td);
                 this.table.appendChild(r);
+                this.cells[key] = td;
             };
 
-            for (const [key, val] of Object.entries(data)) { addRow(key, val); }
+            addRow('source', t('sourceType'));
+            addRow('viewport', t('viewport'));
+            addRow('frameInfo', t('frameInfo'));
+            addRow('resolution', t('resolution'));
+            addRow('color', t('colorProfile'));
         }
 
-        show() { this.el.classList.add('visible'); this.update(); }
-        hide() { this.el.classList.remove('visible'); }
+        updateStaticUI() {
+            if (!this.video) return;
+            this.cells.source.textContent = this.getSourceType();
+            this.cells.color.textContent = this.getColorSpace();
+        }
+
+        updateDynamicUI() {
+            if (!this.video) return;
+            this.cells.viewport.textContent = `${this.video.clientWidth}×${this.video.clientHeight} (${window.devicePixelRatio}x)`;
+            this.cells.frameInfo.textContent = this.currentFps;
+            this.cells.resolution.textContent = `${this.video.videoWidth}×${this.video.videoHeight}`;
+        }
+
+        startTracking() {
+            this.stopTracking();
+            if (!this.video) return;
+
+            this.isTracking = true;
+            let frameCount = 0;
+
+            if ('requestVideoFrameCallback' in this.video) {
+                const loop = () => {
+                    if (!this.isTracking) return;
+                    frameCount++;
+                    this.video.requestVideoFrameCallback(loop);
+                };
+                this.video.requestVideoFrameCallback(loop);
+            }
+
+            this.lastTime = performance.now();
+            this.updateInterval = setInterval(() => {
+                const now = performance.now();
+                const deltaMs = now - this.lastTime;
+
+                if (deltaMs > 0) this.currentFps = (frameCount / (deltaMs / 1000)).toFixed(1);
+
+                frameCount = 0;
+                this.lastTime = now;
+
+                this.updateDynamicUI();
+            }, 500);
+        }
+
+        stopTracking() {
+            this.isTracking = false;
+            if (this.updateInterval) {
+                clearInterval(this.updateInterval);
+                this.updateInterval = null;
+            }
+        }
+
+        show() {
+            this.el.classList.add('visible');
+            this.updateStaticUI();
+            this.updateDynamicUI();
+            this.startTracking();
+        }
+
+        hide() {
+            this.el.classList.remove('visible');
+            this.stopTracking();
+        }
+
         toggle() { this.el.classList.contains('visible') ? this.hide() : this.show(); }
         get visible() { return this.el.classList.contains('visible'); }
 
-        setVideo(v) { this.video = v; this.hide(); }
+        setVideo(v) {
+            this.video = v;
+            this.cachedColorSpace = null;
+            this.currentFps = '0.0';
+            this.hide();
+        }
     }
 
     class UIManager {
