@@ -12,6 +12,8 @@
 // @match        https://www.xiaohongshu.com/*
 // @match        https://www.youtube.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=douyin.com
+// @grant        GM_registerMenuCommand
+// @grant        GM_openInTab
 // @grant        none
 // @license      GPL-3.0
 // ==/UserScript==
@@ -31,6 +33,8 @@
 
     const LOCALE = {
         'en': {
+            starGitHub: 'Support on GitHub (⭐)',
+            feedback: 'Feedback / Suggestions',
             playbackSpeed: 'Playback Speed',
             speedUnit: '×',
             statsLabel: 'Show Media Statistics',
@@ -43,9 +47,10 @@
             screenshotError: 'Screenshot failed due to CORS restrictions.',
             file: 'File',
             mediaSource: 'Media Source',
-
         },
         'zh-CN': {
+            starGitHub: '在 GitHub 上支持本项目 (⭐)',
+            feedback: '反馈 Bug / 建议',
             playbackSpeed: '播放速度',
             speedUnit: '倍',
             statsLabel: '显示媒体统计数据',
@@ -712,8 +717,23 @@
             this.pollingId = null;
             this.layoutObserver = null;
 
+            this.setupMenuCommands();
             this.setupEvents();
             this.scan();
+        }
+
+        setupMenuCommands() {
+            if (typeof GM_registerMenuCommand !== 'undefined') {
+                const githubUrl = "https://github.com/ryu-dayo/chimo-chimo-loop";
+
+                GM_registerMenuCommand(t('starGitHub'), () => {
+                    GM_openInTab(githubUrl, { active: true });
+                });
+
+                GM_registerMenuCommand(t('feedback'), () => {
+                    GM_openInTab(`${githubUrl}/issues`, { active: true });
+                });
+            }
         }
 
         setupEvents() {
