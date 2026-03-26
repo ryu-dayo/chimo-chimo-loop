@@ -1,6 +1,10 @@
 # chimo-chimo-loop
 
-A lightweight userscript that adds a floating control bar with Picture-in-Picture (PiP), Loop, and Speed controls to HTML5 videos.
+[![License](https://img.shields.io/github/license/ryu-dayo/chimo-chimo-loop?style=flat-square)](LICENSE)
+[![GreasyFork Installs](https://img.shields.io/greasyfork/dt/556184?label=Installs&style=flat-square)](https://greasyfork.org/zh-CN/scripts/556184-chimo-chimo-loop)
+[![GitHub stars](https://img.shields.io/github/stars/ryu-dayo/chimo-chimo-loop?style=flat-square)](https://github.com/ryu-dayo/chimo-chimo-loop/stargazers)
+
+A lightweight userscript that adds a surgical-grade floating control bar with PiP, A-B Loop, Speed control, and Media Statistics to HTML5 videos.
 
 > Primarily tested on **Safari for macOS**.
 > Also compatible with Chromium browsers (e.g., Edge), though functionality and visual performance may vary on some sites.
@@ -10,7 +14,8 @@ A lightweight userscript that adds a floating control bar with Picture-in-Pictur
 - 🌠 **Picture-in-Picture**: One-click toggle for floating video mode.
 - 🔁 **Advanced Loop**: Supports both Full Loop and A-B Repeat.
 - ⚡️ **Speed Control**: Quickly adjust playback speed.
-- 🧊 **Minimalist UI**: Automatically injected overlay at the top-left corner.
+- 📸 **Lossless Screenshot**: One-click to capture 1:1 PNG frames without UI overlay.
+- 📊 **Media Stats**: Real-time FPS, resolution, and color space tracking.
 - 👻 **Auto-hide**: Fades out after 3 seconds of inactivity.
 
 ## User Guide
@@ -20,10 +25,10 @@ A lightweight userscript that adds a floating control bar with Picture-in-Pictur
 | 🔳 | **PiP** | Toggle Picture-in-Picture mode. |
 | 🔁 | **Loop / Set A** | Enable Full Loop and **automatically set Point A** at the current time. |
 | 🅱️ | **Set Point B** | (Appears after looping) Click to lock the **A-B range** and start looping. |
-| ❎ | **Exit Loop** | Clear A/B range and disable loop mode. |
+| 📸 | **Screenshot** | Save the current frame as a high-quality PNG. |
 | ⏩ | **More / Speed** | Expand the menu for playback speed and media statistics. |
 
-> **💡 Tip:** To set up an A-B loop, simply click the "Loop" button once to mark the start point, then wait for the video to reach your desired end point and click the "🅱️" icon.
+> **💡 Tip:** Use **A-B Loop** with **0.5x Speed** to master difficult guitar solos or dance moves easily.
 
 ## Compatibility
 
@@ -33,7 +38,7 @@ A lightweight userscript that adds a floating control bar with Picture-in-Pictur
 
 ## Installation
 
-Install from [GreasyFork](https://greasyfork.org/zh-CN/scripts/556184-chimo-chimo-loop)
+**[🚀 Install via GreasyFork](https://greasyfork.org/zh-CN/scripts/556184-chimo-chimo-loop)**
 
 ---
 
