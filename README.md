@@ -1,8 +1,8 @@
 # chimo-chimo-loop
 
-[![License](https://img.shields.io/github/license/ryu-dayo/chimo-chimo-loop?style=flat-square)](LICENSE)
-[![GreasyFork Installs](https://img.shields.io/greasyfork/dt/556184?label=Installs&style=flat-square)](https://greasyfork.org/zh-CN/scripts/556184-chimo-chimo-loop)
-[![GitHub stars](https://img.shields.io/github/stars/ryu-dayo/chimo-chimo-loop?style=flat-square)](https://github.com/ryu-dayo/chimo-chimo-loop/stargazers)
+[![License](https://img.shields.io/github/license/ryu-dayo/chimo-chimo-loop?style=flat)](LICENSE)
+[![GreasyFork Installs](https://img.shields.io/greasyfork/dt/556184?label=Installs&style=flat)](https://greasyfork.org/scripts/556184)
+[![GitHub stars](https://img.shields.io/github/stars/ryu-dayo/chimo-chimo-loop?style=flat)](https://github.com/ryu-dayo/chimo-chimo-loop/stargazers)
 
 A lightweight userscript that adds a surgical-grade floating control bar with PiP, A-B Loop, Speed control, and Media Statistics to HTML5 videos.
 
@@ -38,7 +38,7 @@ A lightweight userscript that adds a surgical-grade floating control bar with Pi
 
 ## Installation
 
-**[🚀 Install via GreasyFork](https://greasyfork.org/zh-CN/scripts/556184-chimo-chimo-loop)**
+**[🚀 Install via GreasyFork](https://greasyfork.org/scripts/556184)**
 
 ---
 

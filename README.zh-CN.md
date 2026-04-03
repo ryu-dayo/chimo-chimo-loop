@@ -1,8 +1,8 @@
 # chimo-chimo-loop
 
-[![License](https://img.shields.io/github/license/ryu-dayo/chimo-chimo-loop?style=flat-square)](LICENSE)
-[![GreasyFork Installs](https://img.shields.io/greasyfork/dt/556184?label=Installs&style=flat-square)](https://greasyfork.org/zh-CN/scripts/556184-chimo-chimo-loop)
-[![GitHub stars](https://img.shields.io/github/stars/ryu-dayo/chimo-chimo-loop?style=flat-square)](https://github.com/ryu-dayo/chimo-chimo-loop/stargazers)
+[![License](https://img.shields.io/github/license/ryu-dayo/chimo-chimo-loop?style=flat)](LICENSE)
+[![GreasyFork Installs](https://img.shields.io/greasyfork/dt/556184?label=Installs&style=flat)](https://greasyfork.org/scripts/556184)
+[![GitHub stars](https://img.shields.io/github/stars/ryu-dayo/chimo-chimo-loop?style=flat)](https://github.com/ryu-dayo/chimo-chimo-loop/stargazers)
 
 一款轻量级的用户脚本，为 HTML5 视频新增功能强大的悬浮控制条，支持画中画、A-B 循环、倍速调节、无损截图及媒体信息统计。
 
@@ -38,7 +38,7 @@
 
 ## 安装方法
 
-**[🚀 前往 GreasyFork 安装](https://greasyfork.org/zh-CN/scripts/556184-chimo-chimo-loop)**
+**[🚀 前往 GreasyFork 安装](https://greasyfork.org/scripts/556184)**
 
 ---
 

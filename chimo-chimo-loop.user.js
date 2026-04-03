@@ -1,9 +1,11 @@
 // ==UserScript==
 // @name         chimo-chimo-loop - HTML5 Video Enhancer
+// @name:ja      chimo-chimo-loop - HTML5動画プレーヤー拡張
 // @name:zh-CN   chimo-chimo-loop (HTML5 视频增强器)
 // @namespace    https://github.com/ryu-dayo/chimo-chimo-loop
 // @version      1.4.0
 // @description  Supercharge HTML5 video playback with Picture-in-Picture (PiP), A-B loop, speed control, lossless screenshots, and advanced media statistics.
+// @description:ja     HTML5の動画再生をより快適に。ピクチャインピクチャ、A-Bリピート、再生速度調整、高画質スクリーンショット、詳細なメディア統計などの高度な機能を追加します。
 // @description:zh-CN  HTML5 视频增强神器：支持画中画、A-B区间循环、倍速调节、无损截图以及硬核的媒体统计信息（实时FPS、色彩空间等）。
 // @author       ryu-dayo
 // @match        https://www.douyin.com/*
@@ -48,6 +50,22 @@
             screenshotError: 'Screenshot failed due to CORS restrictions.',
             file: 'File',
             mediaSource: 'Media Source',
+        },
+        'ja': {
+            starGitHub: 'GitHubで応援 (⭐)',
+            feedback: 'フィードバック / ご要望',
+            playbackSpeed: '再生速度',
+            speedUnit: '×',
+            statsLabel: 'メディアの統計情報を表示',
+            sourceType: 'ソース',
+            viewport: 'ビューポート',
+            frameInfo: 'フレーム',
+            resolution: '解像度',
+            codecInfo: 'コーデック',
+            colorProfile: 'カラー',
+            screenshotError: 'CORS制限によりスクリーンショットに失敗しました。',
+            file: 'ファイル',
+            mediaSource: 'メディアソース',
         },
         'zh-CN': {
             starGitHub: '在 GitHub 上支持本项目 (⭐)',
