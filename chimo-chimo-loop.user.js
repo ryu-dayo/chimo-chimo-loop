@@ -28,10 +28,11 @@
         enterPip: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 101 82"><path d="M12.5 63.3h55.7q12.6 0 12.5-12.3V12.3Q80.7 0 68.2 0H12.5Q0 0 0 12.3V51q0 12.3 12.5 12.3M7 50.6v-38Q7.1 7 12.5 7h55.6q5.4.1 5.5 5.6v38q-.1 5.6-5.5 5.6H12.5q-5.4 0-5.5-5.6"/><path d="M31 16.8c-.2-1.2-1.8-2.6-3.4-1L23.4 20l-5.8-6c-1-1-2.8-1-3.8 0s-1 2.7 0 3.8l5.9 5.8-4.1 4.2c-1.7 1.6-.3 3.2 1 3.4l14 2.1q1 .1 2-.6.6-.8.5-1.8zm19.5 64.8h37.2q12.4 0 12.4-12.2V44.8q0-12.3-12.4-12.3H50.5Q38 32.5 38 44.8v24.6q0 12.3 12.5 12.2"/></svg>`,
         exitPip: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 101 82"><path d="M12.5 63.3h55.7q12.6 0 12.5-12.3V12.3Q80.7 0 68.2 0H12.5Q0 0 0 12.3V51q0 12.3 12.5 12.3M7 50.6v-38Q7.1 7 12.5 7h55.6q5.4.1 5.5 5.6v38q-.1 5.6-5.5 5.6H12.5q-5.4 0-5.5-5.6"/><path d="M15.1 29.9c.2 1.2 1.8 2.6 3.4 1l4.2-4.1 5.9 5.8c1 1 2.7 1 3.7 0s1-2.7 0-3.7l-5.8-6 4-4.1c1.7-1.6.3-3.2-1-3.4l-14-2q-1.2-.3-1.9.5t-.6 1.9zm35.4 51.7h37.2q12.4 0 12.4-12.2V44.8q0-12.3-12.4-12.3H50.5Q38 32.5 38 44.8v24.6q0 12.3 12.5 12.2"/></svg>`,
         enableLoop: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 84 70"><path  d="M34.9 66.6V41.9q0-2.6-2.8-2.6-1.1 0-2.1.8L15.4 52.4c-1.2 1-1.3 2.6 0 3.8L30 68.5q1 .7 2.1.7 2.7 0 2.8-2.6m45.3-33.5c-2 0-3.5 1.5-3.5 3.6v3.7c0 6.2-4.6 10.5-11.2 10.5H29.2c-2 0-3.6 1.6-3.6 3.5 0 2 1.6 3.6 3.6 3.6h35.6c11.6 0 19-6.7 19-17v-4.3c0-2-1.5-3.6-3.6-3.6M49 2.6v24.7q0 2.6 2.7 2.6 1.1 0 2.1-.7l14.6-12.3c1.3-1 1.4-2.7 0-3.8L53.8.8q-1-.8-2.1-.8Q49 .1 49 2.6M3.6 36.2c2 0 3.6-1.6 3.6-3.6v-3.7c0-6.3 4.5-10.5 11-10.5h36.4a3.5 3.5 0 0 0 0-7.1H19c-11.6 0-19 6.6-19 17v4.3c0 2 1.6 3.6 3.6 3.6"/></svg>`,
-        disableLoop: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 107 83"><path d="M3.6 49c2 0 3.6-1.5 3.6-3.5v-3.8c0-6.2 4.5-10.5 11-10.5h21c2 0 3.6-1.6 3.6-3.5 0-2-1.6-3.5-3.6-3.5H19c-11.6 0-19 6.6-19 17v4.3c0 2 1.6 3.6 3.6 3.6m30-33.5v24.7q0 2.6 2.7 2.6 1.1 0 2-.8L53 29.8c1.2-1 1.3-2.7 0-3.8L38.4 13.7q-1-.8-2.1-.8-2.7.1-2.8 2.6M80.1 46c-2 0-3.5 1.6-3.5 3.7v3.7c0 6.2-4.6 10.5-11.2 10.5H29.2c-2 0-3.6 1.6-3.6 3.5 0 2 1.6 3.5 3.6 3.5h35.6c11.6 0 19-6.6 19-17v-4.2c0-2-1.5-3.7-3.6-3.7M35 79.5V54.8q0-2.6-2.8-2.6-1.1 0-2.1.8L15.4 65.3c-1.2 1-1.3 2.6 0 3.7L30 81.3q1 .8 2.1.8 2.7 0 2.8-2.6"/><path d="M80.7 0c14 0 25.5 11.4 25.5 25.4a25.7 25.7 0 0 1-25.5 25.4 25.4 25.4 0 0 1 0-50.8m0 5.7C70 5.7 61 14.6 61 25.4S70 45 80.7 45a20 20 0 0 0 19.7-19.7c0-10.8-8.8-19.7-19.7-19.7"/><path d="M75.5 34.5c-1 1.1-2.7.9-3.7-.2-1-1-1.2-2.6-.2-3.7l5.4-5.4-4.9-5c-1-1-1-2.5 0-3.5s2.6-1 3.5 0l5 5 5.4-5.4c1.1-1.1 2.7-1 3.7.1 1 1 1.3 2.6.1 3.7l-5.3 5.4 4.9 5c1 1 1 2.6 0 3.5-1 1-2.6 1-3.6 0l-5-4.9z"/></svg>`,
+        disableLoop: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 79 79"><path d="M39.4 0a39.5 39.5 0 1 1 0 79 39.5 39.5 0 0 1 0-79m22.5 37.8a3 3 0 0 0-3 3V43c0 3.5-2.5 5.8-6.2 5.8H37.2V44q-.1-2.3-2.4-2.4a3 3 0 0 0-1.8.6L24 50q-2 1.7 0 3.5l9 7.7q.8.6 1.8.6 2.3-.1 2.4-2.4v-4.7h15c7.6 0 12.6-4.4 12.6-11.3v-2.6a3 3 0 0 0-3-3M44 17.1q-2.2.1-2.3 2.4v4.7h-15C19 24.2 14 28.7 14 35.6v2.6a3 3 0 0 0 3 3 3 3 0 0 0 3-3v-2.3c0-3.5 2.4-5.8 6-5.8h15.7v4.8q.1 2.3 2.3 2.4 1 0 1.8-.6l9-7.7c1.3-1 1.3-2.5 0-3.5l-9-7.7q-.7-.7-1.8-.7"/></svg>`,
         more: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 73 69"><path d="M38.2 68.2q1.8 0 2.9-1.3l30.1-30q1.3-1.2 1.3-2.8a4 4 0 0 0-1.3-2.9l-30.1-30A4 4 0 0 0 38.2 0a4 4 0 0 0-4 4q0 1.7 1.2 3l29.5 29.3v-4.5L35.4 61.2q-1.1 1.2-1.2 3a4 4 0 0 0 4 4"/><path d="M4 68.2q1.8 0 2.9-1.3L37 37q1.1-1.2 1.2-2.8a4 4 0 0 0-1.2-2.9L6.9 1.2A4 4 0 0 0 4 0a4 4 0 0 0-4 4q0 1.7 1.2 3l29.5 29.3v-4.5L1.2 61.2Q0 62.4 0 64.2a4 4 0 0 0 4 4"/></svg>`,
         setPointB: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M12.5 71.2h46.2Q71 71.2 71 58.9V12.3Q71.2 0 58.7 0H12.5Q0 0 0 12.3v46.6q0 12.3 12.5 12.3m0-7q-5.4 0-5.5-5.7V12.6q.1-5.5 5.5-5.5h46q5.5 0 5.6 5.5v46Q64 64 58.6 64z"/><path d="M26.7 52.7h11c8.1 0 13.4-4 13.4-10 0-4.6-3.2-7.9-8.4-8.5v-.3c4-1 6.3-3.9 6.3-7.7 0-5.3-4.3-8.7-11-8.7H26.6q-3.9 0-4 4v27.3q.1 3.7 4 3.9m2.8-20.5v-9.6h7c3.6 0 5.9 1.8 5.9 4.7q0 5-7.9 5zm0 15.5V36.9H37q7 .1 7.2 5.5.1 5.4-9 5.3z"/></svg>`,
-        screenshot: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 74"><path d="M80.2 30a4.9 4.9 0 0 1 0-9.7 4.9 4.9 0 0 1 0 9.8M12.5 73.8h70q12.4 0 12.4-12.3v-40Q95 9.3 82.5 9.3H71.7c-3 0-4-.7-5.6-2.5l-3-3.4c-1.9-2-4-3.3-8-3.3H39.8c-4 0-6.1 1.3-8 3.3l-3 3.4c-1.6 1.8-2.6 2.5-5.5 2.5H12.5Q0 9.2 0 21.5v40q0 12.2 12.5 12.2m35-11.7a20.7 20.7 0 0 1-20.8-20.8 20.7 20.7 0 1 1 41.5 0C68.2 52.8 59 62 47.5 62m0-6.6a14.2 14.2 0 1 0-14.3-14.2c0 8 6.4 14.2 14.3 14.2"/></svg>`
+        screenshot: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 74"><path d="M80.2 30a4.9 4.9 0 0 1 0-9.7 4.9 4.9 0 0 1 0 9.8M12.5 73.8h70q12.4 0 12.4-12.3v-40Q95 9.3 82.5 9.3H71.7c-3 0-4-.7-5.6-2.5l-3-3.4c-1.9-2-4-3.3-8-3.3H39.8c-4 0-6.1 1.3-8 3.3l-3 3.4c-1.6 1.8-2.6 2.5-5.5 2.5H12.5Q0 9.2 0 21.5v40q0 12.2 12.5 12.2m35-11.7a20.7 20.7 0 0 1-20.8-20.8 20.7 20.7 0 1 1 41.5 0C68.2 52.8 59 62 47.5 62m0-6.6a14.2 14.2 0 1 0-14.3-14.2c0 8 6.4 14.2 14.3 14.2"/></svg>`,
+        mirror: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 79 79"><path d="M39.4 2.1v3.4h8.5zm0 6.2V12h18.4q0-1.9-.4-3.6zm0 8.3v3.5h27.5l-.2-3.5zm0 8.2v3.5h34.1v-3.5zm0 8.3v3.5h34.2V33zm0 8.2v3.5h34.2v-3.5zm0 8.3V53h34l.1-3.5zm0 8.2v3.5h27.3l.2-3.5zm0 9.1v3.6h18l.4-3.6zm0 6.4v3.4q4.3-1.6 8.5-3.4zm0 5.5a39.4 39.4 0 1 0 0-78.8 39.4 39.4 0 0 0 0 78.8m0-7.4a32 32 0 1 1 0-63.9 32 32 0 0 1 0 63.9"/></svg>`
     };
 
     const LOCALE = {
@@ -156,6 +157,8 @@
         .ccl-icon-more { --icon: url('${ICONS.more}'); }
         .ccl-icon-ab { --icon: url('${ICONS.setPointB}'); }
         .ccl-icon-screenshot { --icon: url('${ICONS.screenshot}'); }
+        .ccl-icon-mirror { --icon: url('${ICONS.mirror}'); }
+        .ccl-icon-mirror[data-active="true"] { transform: scaleX(-1); }
 
         .ccl-btn-container {
             display: flex;
@@ -459,6 +462,37 @@
         }
     }
 
+    class MirrorControl extends BaseControl {
+        constructor() {
+            super('ccl-icon-mirror', () => this.handleMirror());
+            this.isMirrored = false;
+        }
+
+        handleMirror() {
+            if (!this.video) return;
+            
+            this.isMirrored = !this.isMirrored;
+            this.video.style.transform = this.isMirrored ? 'scaleX(-1)' : 'scaleX(1)';
+            this.update();
+        }
+
+        setVideo(v) {
+            super.setVideo(v);
+            // Reset mirror state when setting a new video
+            this.isMirrored = false;
+            if (v) {
+                v.style.transform = 'scaleX(1)';
+            }
+            this.update();
+        }
+
+        update() {
+            if (this.icon) {
+                this.icon.dataset.active = this.isMirrored;
+            }
+        }
+    }
+
     class ControlsBar {
         constructor(onMenuToggle) {
             this.pipControl = new PipControl();
@@ -468,9 +502,10 @@
             });
             this.abControl = new ABControl();
             this.screenshotControl = new ScreenshotControl();
+            this.mirrorControl = new MirrorControl();
             this.moreControl = new MoreControl(() => onMenuToggle());
 
-            this.controls = [this.pipControl, this.loopControl, this.abControl, this.screenshotControl, this.moreControl];
+            this.controls = [this.pipControl, this.loopControl, this.abControl, this.screenshotControl, this.mirrorControl, this.moreControl];
 
             const container = el('div', 'ccl-btn-container')
             this.controls.forEach(c => container.appendChild(c.el));
@@ -882,7 +917,7 @@
                     // Toggle video mirror effect: Alt + M
                     if (e.altKey && e.code === 'KeyM') {
                         e.preventDefault();
-                        // TODO: Implement video mirroring logic
+                        this.ui.mediaControls.controlsBar.mirrorControl.handleMirror();
                         return;
                     }
 
