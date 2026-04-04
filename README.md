@@ -17,16 +17,21 @@ A lightweight userscript that adds a surgical-grade floating control bar with Pi
 - 📸 **Lossless Screenshot**: One-click to capture 1:1 PNG frames without UI overlay.
 - 📊 **Media Stats**: Real-time FPS, resolution, and color space tracking.
 - 👻 **Auto-hide**: Fades out after 3 seconds of inactivity.
+- 🪞 **Mirror Effect**: Horizontally flip video with one click.
 
 ## User Guide
 
-| Icon | Action | Description |
-| :---: | :--- | :--- |
-| 🔳 | **PiP** | Toggle Picture-in-Picture mode. |
-| 🔁 | **Loop / Set A** | Enable Full Loop and **automatically set Point A** at the current time. |
-| 🅱️ | **Set Point B** | (Appears after looping) Click to lock the **A-B range** and start looping. |
-| 📸 | **Screenshot** | Save the current frame as a high-quality PNG. |
-| ⏩ | **More / Speed** | Expand the menu for playback speed and media statistics. |
+> 💡 Use `Alt` on Windows and `Option (⌥)` on macOS.
+
+| Icon | Action | Description | Shortcut |
+| :---: | :--- | :--- | :--- |
+| 🔳 | **PiP** | Toggle Picture-in-Picture mode. | `⌥ + P` |
+| 🔁 | **Loop / Set A** | Enable Full Loop and **automatically set Point A** at the current time. | `⌥ + L` |
+| 🅱️ | **Set Point B** | (Appears after looping) Click to lock the **A-B range** and start looping. | `⌥ + B` |
+| 📸 | **Screenshot** | Save the current frame as a high-quality PNG. | `⌥ + S` |
+| ⏩ | **Playback Speed** | Adjust video playback rate. | `⌥ + -/=` |
+| 📊 | **Stats** | Toggle real-time media statistics. | `⌥ + I` |
+| 🪞 | **Mirror** | Horizontally flip video. | `⌥ + M` |
 
 > **💡 Tip:** Use **A-B Loop** with **0.5x Speed** to master difficult guitar solos or dance moves easily.
 

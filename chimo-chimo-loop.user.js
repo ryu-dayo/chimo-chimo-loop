@@ -3,10 +3,10 @@
 // @name:ja      chimo-chimo-loop - HTML5動画プレーヤー拡張
 // @name:zh-CN   chimo-chimo-loop (HTML5 视频增强器)
 // @namespace    https://github.com/ryu-dayo/chimo-chimo-loop
-// @version      1.4.0
-// @description  Supercharge HTML5 video playback with Picture-in-Picture (PiP), A-B loop, speed control, lossless screenshots, and advanced media statistics.
-// @description:ja     HTML5の動画再生をより快適に。ピクチャインピクチャ、A-Bリピート、再生速度調整、高画質スクリーンショット、詳細なメディア統計などの高度な機能を追加します。
-// @description:zh-CN  HTML5 视频增强神器：支持画中画、A-B区间循环、倍速调节、无损截图以及硬核的媒体统计信息（实时FPS、色彩空间等）。
+// @version      1.5.0
+// @description  Supercharge HTML5 video playback with Picture-in-Picture (PiP), A-B loop, speed control, mirror/flip, lossless screenshots, and advanced media statistics.
+// @description:ja     HTML5の動画再生を強化。ピクチャインピクチャ、A-Bリピート、再生速度調整、動画を左右反転（ミラー）、高画質スクリーンショット、詳細なメディア統計などの高度な機能を追加します。
+// @description:zh-CN  HTML5 视频增强神器：支持画中画、A-B区间循环、倍速调节、镜像翻转、无损截图以及硬核的媒体统计信息（实时FPS、色彩空间等）。
 // @author       ryu-dayo
 // @match        https://www.douyin.com/*
 // @match        https://www.facebook.com/*
