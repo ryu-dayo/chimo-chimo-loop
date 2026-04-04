@@ -470,7 +470,7 @@
 
         handleMirror() {
             if (!this.video) return;
-            
+
             this.isMirrored = !this.isMirrored;
             this.video.style.transform = this.isMirrored ? 'scaleX(-1)' : 'scaleX(1)';
             this.update();
@@ -814,9 +814,11 @@
             document.addEventListener('scroll', () => this.updateRectAndPosition(), { passive: true });
             window.addEventListener('resize', () => this.updateRectAndPosition(), { passive: true });
 
-            document.addEventListener('enterpictureinpicture', () => this.ui.mediaControls.controlsBar.pipControl.update(), true);
-            document.addEventListener('leavepictureinpicture', () => this.ui.mediaControls.controlsBar.pipControl.update(), true);
-            document.addEventListener('webkitpresentationmodechanged', () => this.ui.mediaControls.controlsBar.pipControl.update(), true);
+            const pip = this.ui.mediaControls.controlsBar.pipControl;
+
+            document.addEventListener('enterpictureinpicture', () => pip.update(), true);
+            document.addEventListener('leavepictureinpicture', () => pip.update(), true);
+            document.addEventListener('webkitpresentationmodechanged', () => pip.update(), true);
 
             window.addEventListener('pointermove', (e) => this.handleGlobalPointer(e), { passive: true });
         }
@@ -829,130 +831,52 @@
                 // If Ctrl, Cmd, or Shift key is pressed, do not process to avoid conflicts with browser shortcuts
                 if (e.ctrlKey || e.metaKey || e.shiftKey) return;
 
+                const v = this.activeVideo;
+                const bar = this.ui.mediaControls.controlsBar;
+                const menu = this.ui.mediaControls.menu;
+
                 // Use Alt/Option key as modifier to avoid conflicts with page shortcuts
-                if (this.activeVideo) {
-                    // Play/Pause: Alt + Space
-                    if (e.altKey && e.code === 'Space') {
-                        e.preventDefault();
-                        if (this.activeVideo.paused) {
-                            this.activeVideo.play();
-                        } else {
-                            this.activeVideo.pause();
-                        }
-                        return;
-                    }
+                if (v && e.altKey) {
+                    const handlers = {
+                        'Space': () => { v.paused ? v.play() : v.pause(); },
+                        'ArrowUp': () => { v.volume = Math.min(1, v.volume + 0.1); },
+                        'ArrowDown': () => { v.volume = Math.max(0, v.volume - 0.1); },
+                        'ArrowLeft': () => { v.currentTime -= 5; },
+                        'ArrowRight': () => { v.currentTime += 5; },
+                        'Equal': () => this.adjustPlaybackSpeed(0.25),
+                        'Minus': () => this.adjustPlaybackSpeed(-0.25),
+                        'Digit0': () => { v.playbackRate = 1.0; menu.update(); },
+                        'KeyP': () => bar.pipControl.handlePip(),
+                        'KeyL': () => { v.loop = !v.loop; bar.loopControl.update(); },
+                        'KeyS': () => bar.screenshotControl.handleScreenshot(),
+                        'KeyM': () => bar.mirrorControl.handleMirror(),
+                        'KeyI': () => {
+                            this.ui.stats.toggle();
 
-                    // Volume increase: Alt + Up Arrow
-                    if (e.altKey && e.code === 'ArrowUp') {
-                        e.preventDefault();
-                        this.activeVideo.volume = Math.min(1, this.activeVideo.volume + 0.1);
-                        return;
-                    }
+                            if (!menu.el.classList.contains('hidden')) menu.statsItem.classList.toggle('active');
+                        },
+                        'KeyU': () => { v.muted = !v.muted; },
+                        'KeyB': () => bar.abControl.handleClick(),
+                    };
 
-                    // Volume decrease: Alt + Down Arrow
-                    if (e.altKey && e.code === 'ArrowDown') {
+                    const action = handlers[e.code];
+                    if (action) {
+                        e.stopImmediatePropagation();
                         e.preventDefault();
-                        this.activeVideo.volume = Math.max(0, this.activeVideo.volume - 0.1);
-                        return;
-                    }
-
-                    // Fast forward: Alt + Right Arrow
-                    if (e.altKey && e.code === 'ArrowRight') {
-                        e.preventDefault();
-                        this.activeVideo.currentTime += 5; // Skip forward 5 seconds
-                        return;
-                    }
-
-                    // Rewind: Alt + Left Arrow
-                    if (e.altKey && e.code === 'ArrowLeft') {
-                        e.preventDefault();
-                        this.activeVideo.currentTime -= 5; // Skip backward 5 seconds
-                        return;
-                    }
-
-                    // Playback speed increase: Alt + =
-                    if (e.altKey && (e.code === 'Equal' || e.key === '+' || e.key === '=')) {
-                        e.preventDefault();
-                        this.adjustPlaybackSpeed(0.25);
-                        return;
-                    }
-
-                    // Playback speed decrease: Alt + -
-                    if (e.altKey && (e.code === 'Minus' || e.key === '-')) {
-                        e.preventDefault();
-                        this.adjustPlaybackSpeed(-0.25);
-                        return;
-                    }
-
-                    // Reset playback speed to normal: Alt + 0
-                    if (e.altKey && e.code === 'Digit0') {
-                        e.preventDefault();
-                        this.activeVideo.playbackRate = 1.0;
-                        this.ui.mediaControls.menu.update();
-                        return;
-                    }
-
-                    // Toggle picture-in-picture: Alt + P
-                    if (e.altKey && e.code === 'KeyP') {
-                        e.preventDefault();
-                        this.ui.mediaControls.controlsBar.pipControl.handlePip();
-                        return;
-                    }
-
-                    // Toggle loop playback: Alt + L
-                    if (e.altKey && e.code === 'KeyL') {
-                        e.preventDefault();
-                        this.activeVideo.loop = !this.activeVideo.loop;
-                        this.ui.mediaControls.controlsBar.loopControl.update();
-                        return;
-                    }
-
-                    // Screenshot: Alt + S
-                    if (e.altKey && e.code === 'KeyS') {
-                        e.preventDefault();
-                        this.ui.mediaControls.controlsBar.screenshotControl.handleScreenshot();
-                        return;
-                    }
-
-                    // Toggle video mirror effect: Alt + M
-                    if (e.altKey && e.code === 'KeyM') {
-                        e.preventDefault();
-                        this.ui.mediaControls.controlsBar.mirrorControl.handleMirror();
-                        return;
-                    }
-
-                    // Toggle media statistics display: Alt + I
-                    if (e.altKey && e.code === 'KeyI') {
-                        e.preventDefault();
-                        this.ui.stats.toggle();
-
-                        const menu = this.ui.mediaControls.menu;
-                        if (!menu.el.classList.contains('hidden')) menu.statsItem.classList.toggle('active');
-                        return;
-                    }
-
-                    // Toggle mute: Alt + U
-                    if (e.altKey && e.code === 'KeyU') {
-                        e.preventDefault();
-                        this.activeVideo.muted = !this.activeVideo.muted;
-                        return;
-                    }
-
-                    // Set loop B point: Alt + B
-                    if (e.altKey && e.code === 'KeyB') {
-                        e.preventDefault();
-                        this.ui.mediaControls.controlsBar.abControl.handleClick();
+                        action();
                         return;
                     }
                 }
-            });
+            }, true);
         }
 
         adjustPlaybackSpeed(delta) {
-            if (!this.activeVideo) return;
+            const v = this.activeVideo;
+
+            if (!v) return;
 
             // Use the global SPEED_STEPS constant to ensure consistency
-            const currentSpeed = this.activeVideo.playbackRate;
+            const currentSpeed = v.playbackRate;
 
             // Find the closest speed step to the current speed
             let closestIndex = 0;
@@ -973,7 +897,7 @@
             newIndex = Math.max(0, Math.min(newIndex, SPEED_STEPS.length - 1));
 
             // Set the new playback speed
-            this.activeVideo.playbackRate = SPEED_STEPS[newIndex];
+            v.playbackRate = SPEED_STEPS[newIndex];
 
             // Update the menu display
             this.ui.mediaControls.menu.update();
