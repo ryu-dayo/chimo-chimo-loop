@@ -87,6 +87,9 @@
 
     const t = (k) => (LOCALE[navigator.language] || LOCALE[navigator.language.split('-')[0]] || LOCALE.en)[k] || k;
 
+    // Define common playback speed steps
+    const SPEED_STEPS = [0.5, 1, 1.25, 1.5, 2];
+
     const STYLE = `
         .ccl-controls-container, .ccl-controls-container * {
             font-size: 12px;
@@ -292,15 +295,17 @@
 
     class PipControl extends BaseControl {
         constructor() {
-            super('ccl-icon-pip', () => {
-                if (typeof this.video.webkitSetPresentationMode === 'function') {
-                    const mode = this.video.webkitPresentationMode;
-                    this.video.webkitSetPresentationMode(mode === 'picture-in-picture' ? 'inline' : 'picture-in-picture');
-                } else {
-                    if (document.pictureInPictureElement === this.video) document.exitPictureInPicture();
-                    else this.video.requestPictureInPicture();
-                }
-            });
+            super('ccl-icon-pip', () => this.handlePip());
+        }
+
+        handlePip() {
+            if (typeof this.video.webkitSetPresentationMode === 'function') {
+                const mode = this.video.webkitPresentationMode;
+                this.video.webkitSetPresentationMode(mode === 'picture-in-picture' ? 'inline' : 'picture-in-picture');
+            } else {
+                if (document.pictureInPictureElement === this.video) document.exitPictureInPicture();
+                else this.video.requestPictureInPicture();
+            }
         }
 
         setVideo(v) {
@@ -503,7 +508,7 @@
 
             this.container.appendChild(el('div', 'ccl-menu-head', t('playbackSpeed')));
 
-            [0.5, 1, 1.25, 1.5, 2].forEach(r => {
+            SPEED_STEPS.forEach(r => {
                 const item = el('div', 'ccl-menu-item', `${r} ${t('speedUnit')}`, () => {
                     if (this.video) this.video.playbackRate = r;
                     this.hide();
@@ -738,6 +743,7 @@
 
             this.setupMenuCommands();
             this.setupEvents();
+            this.setupKeyboardShortcuts();
             this.scan();
         }
 
@@ -773,11 +779,169 @@
             document.addEventListener('scroll', () => this.updateRectAndPosition(), { passive: true });
             window.addEventListener('resize', () => this.updateRectAndPosition(), { passive: true });
 
-            document.addEventListener('enterpictureinpicture', () => this.ui.controlsBar.pipControl.update(), true);
-            document.addEventListener('leavepictureinpicture', () => this.ui.controlsBar.pipControl.update(), true);
-            document.addEventListener('webkitpresentationmodechanged', () => this.ui.controlsBar.pipControl.update(), true);
+            document.addEventListener('enterpictureinpicture', () => this.ui.mediaControls.controlsBar.pipControl.update(), true);
+            document.addEventListener('leavepictureinpicture', () => this.ui.mediaControls.controlsBar.pipControl.update(), true);
+            document.addEventListener('webkitpresentationmodechanged', () => this.ui.mediaControls.controlsBar.pipControl.update(), true);
 
             window.addEventListener('pointermove', (e) => this.handleGlobalPointer(e), { passive: true });
+        }
+
+        setupKeyboardShortcuts() {
+            document.addEventListener('keydown', (e) => {
+                // Ignore keys pressed in input fields
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.contentEditable === 'true') return;
+
+                // If Ctrl, Cmd, or Shift key is pressed, do not process to avoid conflicts with browser shortcuts
+                if (e.ctrlKey || e.metaKey || e.shiftKey) return;
+
+                // Use Alt/Option key as modifier to avoid conflicts with page shortcuts
+                if (this.activeVideo) {
+                    // Play/Pause: Alt + Space
+                    if (e.altKey && e.code === 'Space') {
+                        e.preventDefault();
+                        if (this.activeVideo.paused) {
+                            this.activeVideo.play();
+                        } else {
+                            this.activeVideo.pause();
+                        }
+                        return;
+                    }
+
+                    // Volume increase: Alt + Up Arrow
+                    if (e.altKey && e.code === 'ArrowUp') {
+                        e.preventDefault();
+                        this.activeVideo.volume = Math.min(1, this.activeVideo.volume + 0.1);
+                        return;
+                    }
+
+                    // Volume decrease: Alt + Down Arrow
+                    if (e.altKey && e.code === 'ArrowDown') {
+                        e.preventDefault();
+                        this.activeVideo.volume = Math.max(0, this.activeVideo.volume - 0.1);
+                        return;
+                    }
+
+                    // Fast forward: Alt + Right Arrow
+                    if (e.altKey && e.code === 'ArrowRight') {
+                        e.preventDefault();
+                        this.activeVideo.currentTime += 5; // Skip forward 5 seconds
+                        return;
+                    }
+
+                    // Rewind: Alt + Left Arrow
+                    if (e.altKey && e.code === 'ArrowLeft') {
+                        e.preventDefault();
+                        this.activeVideo.currentTime -= 5; // Skip backward 5 seconds
+                        return;
+                    }
+
+                    // Playback speed increase: Alt + =
+                    if (e.altKey && (e.code === 'Equal' || e.key === '+' || e.key === '=')) {
+                        e.preventDefault();
+                        this.adjustPlaybackSpeed(0.25);
+                        return;
+                    }
+
+                    // Playback speed decrease: Alt + -
+                    if (e.altKey && (e.code === 'Minus' || e.key === '-')) {
+                        e.preventDefault();
+                        this.adjustPlaybackSpeed(-0.25);
+                        return;
+                    }
+
+                    // Reset playback speed to normal: Alt + 0
+                    if (e.altKey && e.code === 'Digit0') {
+                        e.preventDefault();
+                        this.activeVideo.playbackRate = 1.0;
+                        this.ui.mediaControls.menu.update();
+                        return;
+                    }
+
+                    // Toggle picture-in-picture: Alt + P
+                    if (e.altKey && e.code === 'KeyP') {
+                        e.preventDefault();
+                        this.ui.mediaControls.controlsBar.pipControl.handlePip();
+                        return;
+                    }
+
+                    // Toggle loop playback: Alt + L
+                    if (e.altKey && e.code === 'KeyL') {
+                        e.preventDefault();
+                        this.activeVideo.loop = !this.activeVideo.loop;
+                        this.ui.mediaControls.controlsBar.loopControl.update();
+                        return;
+                    }
+
+                    // Screenshot: Alt + S
+                    if (e.altKey && e.code === 'KeyS') {
+                        e.preventDefault();
+                        this.ui.mediaControls.controlsBar.screenshotControl.handleScreenshot();
+                        return;
+                    }
+
+                    // Toggle video mirror effect: Alt + M
+                    if (e.altKey && e.code === 'KeyM') {
+                        e.preventDefault();
+                        // TODO: Implement video mirroring logic
+                        return;
+                    }
+
+                    // Toggle media statistics display: Alt + I
+                    if (e.altKey && e.code === 'KeyI') {
+                        e.preventDefault();
+                        this.ui.stats.toggle();
+
+                        const menu = this.ui.mediaControls.menu;
+                        if (!menu.el.classList.contains('hidden')) menu.statsItem.classList.toggle('active');
+                        return;
+                    }
+
+                    // Toggle mute: Alt + U
+                    if (e.altKey && e.code === 'KeyU') {
+                        e.preventDefault();
+                        this.activeVideo.muted = !this.activeVideo.muted;
+                        return;
+                    }
+
+                    // Set loop B point: Alt + B
+                    if (e.altKey && e.code === 'KeyB') {
+                        e.preventDefault();
+                        this.ui.mediaControls.controlsBar.abControl.handleClick();
+                        return;
+                    }
+                }
+            });
+        }
+
+        adjustPlaybackSpeed(delta) {
+            if (!this.activeVideo) return;
+
+            // Use the global SPEED_STEPS constant to ensure consistency
+            const currentSpeed = this.activeVideo.playbackRate;
+
+            // Find the closest speed step to the current speed
+            let closestIndex = 0;
+            let minDiff = Math.abs(SPEED_STEPS[0] - currentSpeed);
+
+            for (let i = 1; i < SPEED_STEPS.length; i++) {
+                const diff = Math.abs(SPEED_STEPS[i] - currentSpeed);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    closestIndex = i;
+                }
+            }
+
+            // Adjust to the next or previous step based on delta
+            let newIndex = closestIndex + (delta > 0 ? 1 : -1);
+
+            // Ensure the index is within valid range
+            newIndex = Math.max(0, Math.min(newIndex, SPEED_STEPS.length - 1));
+
+            // Set the new playback speed
+            this.activeVideo.playbackRate = SPEED_STEPS[newIndex];
+
+            // Update the menu display
+            this.ui.mediaControls.menu.update();
         }
 
         showPersistent() {
