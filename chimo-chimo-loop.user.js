@@ -3,7 +3,7 @@
 // @name:ja      chimo-chimo-loop - HTML5動画プレーヤー拡張
 // @name:zh-CN   chimo-chimo-loop (HTML5 视频增强器)
 // @namespace    https://github.com/ryu-dayo/chimo-chimo-loop
-// @version      1.5.0
+// @version      1.6.0
 // @description  Supercharge HTML5 video playback with Picture-in-Picture (PiP), A-B loop, speed control, mirror/flip, lossless screenshots, and advanced media statistics.
 // @description:ja     HTML5の動画再生を強化。ピクチャインピクチャ、A-Bリピート、再生速度調整、動画を左右反転（ミラー）、高画質スクリーンショット、詳細なメディア統計などの高度な機能を追加します。
 // @description:zh-CN  HTML5 视频增强神器：支持画中画、A-B区间循环、倍速调节、镜像翻转、无损截图以及硬核的媒体统计信息（实时FPS、色彩空间等）。
@@ -32,7 +32,8 @@
         more: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 73 69"><path d="M38.2 68.2q1.8 0 2.9-1.3l30.1-30q1.3-1.2 1.3-2.8a4 4 0 0 0-1.3-2.9l-30.1-30A4 4 0 0 0 38.2 0a4 4 0 0 0-4 4q0 1.7 1.2 3l29.5 29.3v-4.5L35.4 61.2q-1.1 1.2-1.2 3a4 4 0 0 0 4 4"/><path d="M4 68.2q1.8 0 2.9-1.3L37 37q1.1-1.2 1.2-2.8a4 4 0 0 0-1.2-2.9L6.9 1.2A4 4 0 0 0 4 0a4 4 0 0 0-4 4q0 1.7 1.2 3l29.5 29.3v-4.5L1.2 61.2Q0 62.4 0 64.2a4 4 0 0 0 4 4"/></svg>`,
         setPointB: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><path d="M12.5 71.2h46.2Q71 71.2 71 58.9V12.3Q71.2 0 58.7 0H12.5Q0 0 0 12.3v46.6q0 12.3 12.5 12.3m0-7q-5.4 0-5.5-5.7V12.6q.1-5.5 5.5-5.5h46q5.5 0 5.6 5.5v46Q64 64 58.6 64z"/><path d="M26.7 52.7h11c8.1 0 13.4-4 13.4-10 0-4.6-3.2-7.9-8.4-8.5v-.3c4-1 6.3-3.9 6.3-7.7 0-5.3-4.3-8.7-11-8.7H26.6q-3.9 0-4 4v27.3q.1 3.7 4 3.9m2.8-20.5v-9.6h7c3.6 0 5.9 1.8 5.9 4.7q0 5-7.9 5zm0 15.5V36.9H37q7 .1 7.2 5.5.1 5.4-9 5.3z"/></svg>`,
         screenshot: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95 74"><path d="M80.2 30a4.9 4.9 0 0 1 0-9.7 4.9 4.9 0 0 1 0 9.8M12.5 73.8h70q12.4 0 12.4-12.3v-40Q95 9.3 82.5 9.3H71.7c-3 0-4-.7-5.6-2.5l-3-3.4c-1.9-2-4-3.3-8-3.3H39.8c-4 0-6.1 1.3-8 3.3l-3 3.4c-1.6 1.8-2.6 2.5-5.5 2.5H12.5Q0 9.2 0 21.5v40q0 12.2 12.5 12.2m35-11.7a20.7 20.7 0 0 1-20.8-20.8 20.7 20.7 0 1 1 41.5 0C68.2 52.8 59 62 47.5 62m0-6.6a14.2 14.2 0 1 0-14.3-14.2c0 8 6.4 14.2 14.3 14.2"/></svg>`,
-        mirror: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 79 79"><path d="M39.4 2.1v3.4h8.5zm0 6.2V12h18.4q0-1.9-.4-3.6zm0 8.3v3.5h27.5l-.2-3.5zm0 8.2v3.5h34.1v-3.5zm0 8.3v3.5h34.2V33zm0 8.2v3.5h34.2v-3.5zm0 8.3V53h34l.1-3.5zm0 8.2v3.5h27.3l.2-3.5zm0 9.1v3.6h18l.4-3.6zm0 6.4v3.4q4.3-1.6 8.5-3.4zm0 5.5a39.4 39.4 0 1 0 0-78.8 39.4 39.4 0 0 0 0 78.8m0-7.4a32 32 0 1 1 0-63.9 32 32 0 0 1 0 63.9"/></svg>`
+        mirror: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 92 85"><path d="M6.4 84.6h30.2q7.1 0 7-6.9V32.1c0-3.9-3-5.9-6-5.9q-3.1 0-5.4 3L1.3 74.5Q0 76.7 0 79c0 3.1 2 5.7 6.4 5.7m79 0c4.4 0 6.4-2.6 6.4-5.7q.1-2.2-1.3-4.4L59.7 29.2q-2.2-3-5.5-3c-3 0-5.9 2-5.9 5.9v45.6q-.1 7 7 7zM69.7 3v15.7c0 3 2.8 4 5 2.2L85.5 13a2.7 2.7 0 0 0 0-4.3L74.8 1c-2.3-2-5.1-.8-5.1 2M22.2 18.7V3c0-2.8-2.8-4-5.2-2L6.4 8.7a2.7 2.7 0 0 0 0 4.3l10.7 8c2.2 1.6 5 .8 5-2.3m53-5.3q2.3-.2 2.5-2.5c0-1.3-1.1-2.5-2.5-2.5H16.6a2.5 2.5 0 0 0-2.5 2.5q.2 2.3 2.5 2.5z"/></svg>`,
+        rotateLeft: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 78 86"><path d="M10.4 85.2H48q10.4.2 10.4-10.4V37.2q0-10.5-10.4-10.4H10.4Q0 26.7 0 37.2v37.6C0 82 3.5 85.2 10.4 85.2M59 17.3V3c0-3.1-2.3-3.8-4.6-2l-9.7 7.2Q42 10 44.7 12l9.7 7.2c2.3 1.7 4.6 1 4.6-2m-4.2-9.7a2.5 2.5 0 0 0-2.5 2.5c0 1.3 1.2 2.5 2.5 2.5h5c7.6 0 12.6 5.3 12.6 13.3v5.7c0 1.5 1.2 2.7 2.7 2.7s2.7-1.2 2.7-2.7V26c0-11-7.2-18.3-18-18.3z"/></svg>`
     };
 
     const LOCALE = {
@@ -158,7 +159,7 @@
         .ccl-icon-ab { --icon: url('${ICONS.setPointB}'); }
         .ccl-icon-screenshot { --icon: url('${ICONS.screenshot}'); }
         .ccl-icon-mirror { --icon: url('${ICONS.mirror}'); }
-        .ccl-icon-mirror[data-active="true"] { transform: scaleX(-1); }
+        .ccl-icon-rotate-left { --icon: url('${ICONS.rotateLeft}'); }
 
         .ccl-btn-container {
             display: flex;
@@ -472,8 +473,29 @@
             if (!this.video) return;
 
             this.isMirrored = !this.isMirrored;
-            this.video.style.transform = this.isMirrored ? 'scaleX(-1)' : 'scaleX(1)';
+            this.applyMirror();
             this.update();
+        }
+
+        applyMirror() {
+            const v = this.video;
+            const scaleValue = this.isMirrored ? '-1' : '1';
+
+            v.style.setProperty('--ccl-scaleX', scaleValue);
+
+            const rotateAngle = v.style.getPropertyValue('--ccl-rotate');
+
+            if (rotateAngle && rotateAngle !== '0deg') {
+                v.style.transform = `rotate(${rotateAngle}) scale(var(--ccl-scale, 1)) scaleX(${scaleValue})`;
+            } else {
+                if (this.isMirrored) {
+                    v.style.transform = `scaleX(-1)`;
+                } else {
+                    if (v.style.transform === 'scaleX(-1)') {
+                        v.style.removeProperty('transform');
+                    }
+                }
+            }
         }
 
         setVideo(v) {
@@ -481,14 +503,120 @@
             // Reset mirror state when setting a new video
             this.isMirrored = false;
             if (v) {
-                v.style.transform = 'scaleX(1)';
+                v.style.setProperty('--ccl-scaleX', '1');
+                if (v.style.transform === 'scaleX(-1)') {
+                    v.style.removeProperty('transform');
+                }
             }
-            this.update();
+        }
+    }
+
+    class RotateControl extends BaseControl {
+        constructor() {
+            super('ccl-icon-rotate-left', () => this.handleRotate());
+            this.rotationAngle = 0;
+
+            // Listen for player size changes, recalculate scale in real-time
+            this.resizeObserver = new ResizeObserver(() => {
+                if (this.rotationAngle !== 0) {
+                    this.applyRotation();
+                }
+            });
+            this.isObserving = false;
         }
 
-        update() {
-            if (this.icon) {
-                this.icon.dataset.active = this.isMirrored;
+        handleRotate() {
+            if (!this.video) return;
+
+            this.rotationAngle -= 90;
+
+            this.applyRotation();
+        }
+
+        applyRotation() {
+            const v = this.video;
+
+            if (!this.isObserving) {
+                this.resizeObserver.observe(v);
+                this.isObserving = true;
+            }
+
+            const scale = this.calculateScale(v);
+
+            v.style.setProperty('transition', 'transform 0.2s ease-out', 'important');
+            v.style.setProperty('transform-origin', 'center center', 'important');
+
+            v.style.setProperty('--ccl-rotate', `${this.rotationAngle}deg`);
+            v.style.setProperty('--ccl-scale', scale);
+
+            v.style.transform = `rotate(var(--ccl-rotate, 0deg)) scale(var(--ccl-scale, 1)) scaleX(var(--ccl-scaleX, 1))`;
+        }
+
+        // Core math formula: Calculate the scaling factor needed in pure visual state
+        calculateScale(v) {
+            const isPortrait = Math.abs(this.rotationAngle % 180) === 0;
+            if (isPortrait) return 1;
+
+            const cw = v.clientWidth || v.parentElement.clientWidth;
+            const ch = v.clientHeight || v.parentElement.clientHeight;
+
+            const vw = v.videoWidth;
+            const vh = v.videoHeight;
+
+            if (!vw || !vh || !cw || !ch) return 1;
+
+            // 1. Original scaling ratio under object-fit: contain state
+            const k1 = Math.min(cw / vw, ch / vh);
+
+            // 2. Originally drawn image dimensions
+            const paintedWidth = vw * k1;
+            const paintedHeight = vh * k1;
+
+            // 3. After rotating 90 degrees, width and height are reversed
+            const rotatedWidth = paintedHeight;
+            const rotatedHeight = paintedWidth;
+
+            // 4. Calculate: how many times to zoom in/out to fill the safe area again
+            const scaleX = cw / rotatedWidth;
+            const scaleY = ch / rotatedHeight;
+
+            // Take minimum value to ensure image is not cropped (take maximum for cover effect)
+            return Math.min(scaleX, scaleY);
+        }
+
+        resetRotation() {
+            const v = this.video;
+            if (!v) return;
+
+            this.rotationAngle = 0;
+
+            if (this.isObserving) {
+                this.resizeObserver.disconnect();
+                this.isObserving = false;
+            }
+
+            v.style.removeProperty('transition');
+            v.style.removeProperty('transform-origin');
+            v.style.removeProperty('--ccl-rotate');
+            v.style.removeProperty('--ccl-scale');
+
+            const scaleX = v.style.getPropertyValue('--ccl-scaleX');
+            if (scaleX === '-1') {
+                v.style.transform = 'scaleX(-1)';
+            } else {
+                v.style.removeProperty('transform');
+            }
+        }
+
+        setVideo(v) {
+            if (this.video && this.video !== v) {
+                this.resetRotation();
+            }
+
+            super.setVideo(v);
+
+            if (v) {
+                this.resetRotation();
             }
         }
     }
@@ -503,9 +631,10 @@
             this.abControl = new ABControl();
             this.screenshotControl = new ScreenshotControl();
             this.mirrorControl = new MirrorControl();
+            this.rotateControl = new RotateControl();
             this.moreControl = new MoreControl(() => onMenuToggle());
 
-            this.controls = [this.pipControl, this.loopControl, this.abControl, this.screenshotControl, this.mirrorControl, this.moreControl];
+            this.controls = [this.pipControl, this.loopControl, this.abControl, this.screenshotControl, this.mirrorControl, this.rotateControl, this.moreControl];
 
             const container = el('div', 'ccl-btn-container')
             this.controls.forEach(c => container.appendChild(c.el));
@@ -826,7 +955,7 @@
         setupKeyboardShortcuts() {
             document.addEventListener('keydown', (e) => {
                 // Ignore keys pressed in input fields
-                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.contentEditable === 'true') return;
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
 
                 // If Ctrl, Cmd, or Shift key is pressed, do not process to avoid conflicts with browser shortcuts
                 if (e.ctrlKey || e.metaKey || e.shiftKey) return;
@@ -857,6 +986,7 @@
                         },
                         'KeyU': () => { v.muted = !v.muted; },
                         'KeyB': () => bar.abControl.handleClick(),
+                        'KeyR': () => bar.rotateControl.handleRotate(),
                     };
 
                     const action = handlers[e.code];
