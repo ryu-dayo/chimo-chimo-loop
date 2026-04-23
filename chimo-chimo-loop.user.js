@@ -3,10 +3,10 @@
 // @name:ja      chimo-chimo-loop - HTML5動画プレーヤー拡張
 // @name:zh-CN   chimo-chimo-loop (HTML5 视频增强器)
 // @namespace    https://github.com/ryu-dayo/chimo-chimo-loop
-// @version      1.6.0
-// @description  Supercharge HTML5 video playback with Picture-in-Picture (PiP), A-B loop, speed control, mirror/flip, lossless screenshots, and advanced media statistics.
-// @description:ja     HTML5の動画再生を強化。ピクチャインピクチャ、A-Bリピート、再生速度調整、動画を左右反転（ミラー）、高画質スクリーンショット、詳細なメディア統計などの高度な機能を追加します。
-// @description:zh-CN  HTML5 视频增强神器：支持画中画、A-B区间循环、倍速调节、镜像翻转、无损截图以及硬核的媒体统计信息（实时FPS、色彩空间等）。
+// @version      1.6.1
+// @description  Supercharge HTML5 video playback with Picture-in-Picture (PiP), A-B loop, speed control, mirror/rotate, lossless screenshots, and advanced media statistics.
+// @description:ja     HTML5の動画再生を強化。ピクチャインピクチャ、A-Bリピート、再生速度調整、動画を左右反転（ミラー）と回転、高画質スクリーンショット、詳細なメディア統計などの高度な機能を追加します。
+// @description:zh-CN  HTML5 视频增强神器：支持画中画、A-B区间循环、倍速调节、镜像翻转与旋转、无损截图以及硬核的媒体统计信息（实时FPS、色彩空间等）。
 // @author       ryu-dayo
 // @match        https://www.douyin.com/*
 // @match        https://www.facebook.com/*
@@ -285,6 +285,34 @@
         return e;
     }
 
+    const applyGlobalTransform = (video, rotateAngle, scale, scaleX) => {
+        if (!video) return;
+
+        video.setAttribute('data-ccl-active', 'true');
+
+        if (rotateAngle === 0 && scale === 1 && scaleX === 1) {
+            video.removeAttribute('data-ccl-active');
+            const existingStyle = document.getElementById('ccl-dynamic-transform');
+            if (existingStyle) existingStyle.textContent = '';
+            return;
+        }
+
+        let styleEl = document.getElementById('ccl-dynamic-transform');
+        if (!styleEl) {
+            styleEl = document.createElement('style');
+            styleEl.id = 'ccl-dynamic-transform';
+            document.head.appendChild(styleEl);
+        }
+
+        styleEl.textContent = `
+            video[data-ccl-active="true"] {
+                transform: rotate(${rotateAngle}deg) scale(${scale}) scaleX(${scaleX}) !important;
+                transition: transform 0.2s ease-out !important;
+                transform-origin: center center !important;
+            }
+        `;
+    }
+
     class BaseControl {
         constructor(iconClass, onClick) {
             this.video = null;
@@ -464,9 +492,10 @@
     }
 
     class MirrorControl extends BaseControl {
-        constructor() {
+        constructor(rotateControl) {
             super('ccl-icon-mirror', () => this.handleMirror());
             this.isMirrored = false;
+            this.rotateControl = rotateControl;
         }
 
         handleMirror() {
@@ -478,36 +507,17 @@
         }
 
         applyMirror() {
-            const v = this.video;
-            const scaleValue = this.isMirrored ? '-1' : '1';
-
-            v.style.setProperty('--ccl-scaleX', scaleValue);
-
-            const rotateAngle = v.style.getPropertyValue('--ccl-rotate');
-
-            if (rotateAngle && rotateAngle !== '0deg') {
-                v.style.transform = `rotate(${rotateAngle}) scale(var(--ccl-scale, 1)) scaleX(${scaleValue})`;
-            } else {
-                if (this.isMirrored) {
-                    v.style.transform = `scaleX(-1)`;
-                } else {
-                    if (v.style.transform === 'scaleX(-1)') {
-                        v.style.removeProperty('transform');
-                    }
-                }
-            }
+            const scaleX = this.isMirrored ? -1 : 1;
+            const rotate = this.rotateControl ? this.rotateControl.rotationAngle : 0;
+            const scale = this.rotateControl && rotate !== 0 ? this.rotateControl.calculateScale(this.video) : 1;
+            
+            applyGlobalTransform(this.video, rotate, scale, scaleX);
         }
 
         setVideo(v) {
             super.setVideo(v);
             // Reset mirror state when setting a new video
             this.isMirrored = false;
-            if (v) {
-                v.style.setProperty('--ccl-scaleX', '1');
-                if (v.style.transform === 'scaleX(-1)') {
-                    v.style.removeProperty('transform');
-                }
-            }
         }
     }
 
@@ -515,6 +525,7 @@
         constructor() {
             super('ccl-icon-rotate-left', () => this.handleRotate());
             this.rotationAngle = 0;
+            this.mirrorControl = null;
 
             // Listen for player size changes, recalculate scale in real-time
             this.resizeObserver = new ResizeObserver(() => {
@@ -541,15 +552,10 @@
                 this.isObserving = true;
             }
 
-            const scale = this.calculateScale(v);
+            const scale = this.rotationAngle !== 0 ? this.calculateScale(v) : 1;
+            const scaleX = (this.mirrorControl && this.mirrorControl.isMirrored) ? -1 : 1;
 
-            v.style.setProperty('transition', 'transform 0.2s ease-out', 'important');
-            v.style.setProperty('transform-origin', 'center center', 'important');
-
-            v.style.setProperty('--ccl-rotate', `${this.rotationAngle}deg`);
-            v.style.setProperty('--ccl-scale', scale);
-
-            v.style.transform = `rotate(var(--ccl-rotate, 0deg)) scale(var(--ccl-scale, 1)) scaleX(var(--ccl-scaleX, 1))`;
+            applyGlobalTransform(v, this.rotationAngle, scale, scaleX);
         }
 
         // Core math formula: Calculate the scaling factor needed in pure visual state
@@ -595,17 +601,8 @@
                 this.isObserving = false;
             }
 
-            v.style.removeProperty('transition');
-            v.style.removeProperty('transform-origin');
-            v.style.removeProperty('--ccl-rotate');
-            v.style.removeProperty('--ccl-scale');
-
-            const scaleX = v.style.getPropertyValue('--ccl-scaleX');
-            if (scaleX === '-1') {
-                v.style.transform = 'scaleX(-1)';
-            } else {
-                v.style.removeProperty('transform');
-            }
+            const scaleX = (this.mirrorControl && this.mirrorControl.isMirrored) ? -1 : 1;
+            applyGlobalTransform(v, 0, 1, scaleX);
         }
 
         setVideo(v) {
@@ -630,8 +627,9 @@
             });
             this.abControl = new ABControl();
             this.screenshotControl = new ScreenshotControl();
-            this.mirrorControl = new MirrorControl();
             this.rotateControl = new RotateControl();
+            this.mirrorControl = new MirrorControl(this.rotateControl);
+            this.rotateControl.mirrorControl = this.mirrorControl;
             this.moreControl = new MoreControl(() => onMenuToggle());
 
             this.controls = [this.pipControl, this.loopControl, this.abControl, this.screenshotControl, this.mirrorControl, this.rotateControl, this.moreControl];
