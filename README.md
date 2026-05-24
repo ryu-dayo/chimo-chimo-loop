@@ -4,42 +4,38 @@
 [![GreasyFork Installs](https://img.shields.io/greasyfork/dt/556184?label=Installs&style=flat)](https://greasyfork.org/scripts/556184)
 [![GitHub stars](https://img.shields.io/github/stars/ryu-dayo/chimo-chimo-loop?style=flat)](https://github.com/ryu-dayo/chimo-chimo-loop/stargazers)
 
+*Read this in other languages: [日本語](README.ja.md), [简体中文](README.zh-CN.md)*
+
+![chimo-chimo-loop showcase](./assets/hero.jpg)
+
 A lightweight userscript that adds a surgical-grade floating control bar with PiP, A-B Loop, Speed control, and Media Statistics to HTML5 videos.
 
-> Primarily tested on **Safari for macOS**.
-> Also compatible with Chromium browsers (e.g., Edge), though functionality and visual performance may vary on some sites.
+> Primarily tested on **Safari for macOS**. Also compatible with Chromium browsers (e.g., Edge).
 
-## Features
+## Features & Shortcuts
 
-- 🌠 **Picture-in-Picture**: One-click toggle for floating video mode.
-- 🔁 **Advanced Loop**: Supports both Full Loop and A-B Repeat.
-- ⚡️ **Speed Control**: Quickly adjust playback speed.
-- 📸 **Lossless Screenshot**: One-click to capture 1:1 PNG frames without UI overlay.
-- 📊 **Media Stats**: Real-time FPS, resolution, and color space tracking.
-- 👻 **Auto-hide**: Fades out after 3 seconds of inactivity.
-- 🪞 **Mirror Effect**: Horizontally flip video with one click.
+> 💡 **Modifier Key:** Use `Alt` on Windows and `Option (⌥)` on macOS.
+> *Note: Shortcuts are intelligently disabled while typing in input fields or textareas.*
 
-## User Guide
+| Feature | Description | Shortcut |
+| :--- | :--- | :--- |
+| 🔳 **Picture-in-Picture** | Toggle floating video mode. | `⌥` + `P` |
+| 🔁 **A-B Loop** | `L` to enable Full Loop (auto-sets Point A). <br>`B` to lock Point B and start A-B looping. | `⌥` + `L` / `B` |
+| 📸 **Lossless Screenshot**| Capture a 1:1 original resolution PNG frame without UI overlay. | `⌥` + `S` |
+| 🪞 **Spatial Control** | `M` to Mirror horizontally. <br>`R` to Rotate in 90° increments (with adaptive scaling). | `⌥` + `M` / `R` |
+| ⏩ **Playback Speed** | `-` to decrease, `=` to increase speed (0.5x ~ 2.0x). <br>`0` to instantly reset to 1.0x. | `⌥` + `-` / `=` / `0` |
+| ⏪ **Seek & Playback** | `Space` to Play/Pause video. <br>`←` / `→` to seek backward/forward by 5 seconds. | `⌥` + `Space` / `←` / `→` |
+| 🔊 **Audio Control** | `↑` / `↓` to adjust volume by ±10%. <br>`U` to toggle Mute. | `⌥` + `↑` / `↓` / `U` |
+| 📊 **Media Stats** | Toggle real-time FPS, resolution, and color space tracking. | `⌥` + `I` |
+| 👻 **Auto-hide** | The UI elegantly fades out after 3 seconds of inactivity. | - |
 
-> 💡 Use `Alt` on Windows and `Option (⌥)` on macOS.
-
-| Icon | Action | Description | Shortcut |
-| :---: | :--- | :--- | :--- |
-| 🔳 | **PiP** | Toggle Picture-in-Picture mode. | `⌥ + P` |
-| 🔁 | **Loop / Set A** | Enable Full Loop and **automatically set Point A** at the current time. | `⌥ + L` |
-| 🅱️ | **Set Point B** | (Appears after looping) Click to lock the **A-B range** and start looping. | `⌥ + B` |
-| 📸 | **Screenshot** | Save the current frame as a high-quality PNG. | `⌥ + S` |
-| ⏩ | **Playback Speed** | Adjust video playback rate. | `⌥ + -/=` |
-| 📊 | **Stats** | Toggle real-time media statistics. | `⌥ + I` |
-| 🪞 | **Mirror** | Horizontally flip video. | `⌥ + M` |
-
-> **💡 Tip:** Use **A-B Loop** with **0.5x Speed** to master difficult guitar solos or dance moves easily.
+> **💡 Pro Tip:** Combine **A-B Loop** with **0.5x Speed** to easily breakdown and master complex guitar fingerstyle mechanics (requiring both hands) or detailed dance choreography.
 
 ## Compatibility
 
-- **Universal Support**: Works on most pages that use standard HTML5 `<video>` elements.
-- **Feature Priority**: If the website already provides equivalent native functionality, it is recommended to use the site's built-in controls for the best experience.
-- **Behavioral Notes**: Some platforms use custom playback logic, which may occasionally cause the script's state to differ from the actual site behavior.
+- **Universal Support**: Works on most pages utilizing standard HTML5 `<video>` elements.
+- **Feature Priority**: If a website already provides equivalent native functionality, using their built-in controls is recommended for the best experience.
+- **Behavioral Notes**: Some platforms use custom playback logic, which may occasionally cause the script's visual state to differ slightly from actual site behavior.
 
 ## Installation
 
