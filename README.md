@@ -1,8 +1,8 @@
 # chimo-chimo-loop
 
-[![License](https://img.shields.io/github/license/ryu-dayo/chimo-chimo-loop?style=flat)](LICENSE)
+[![License](https://img.shields.io/github/license/ryu-dayo/chimo-chimo-loop?label=License&style=flat)](LICENSE)
 [![GreasyFork Installs](https://img.shields.io/greasyfork/dt/556184?label=Installs&style=flat)](https://greasyfork.org/scripts/556184)
-[![GitHub stars](https://img.shields.io/github/stars/ryu-dayo/chimo-chimo-loop?style=flat)](https://github.com/ryu-dayo/chimo-chimo-loop/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/ryu-dayo/chimo-chimo-loop?label=Stars&style=flat)](https://github.com/ryu-dayo/chimo-chimo-loop/stargazers)
 
 *Read this in other languages: [日本語](README.ja.md), [简体中文](README.zh-CN.md)*
 
